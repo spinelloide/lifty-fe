@@ -29,7 +29,10 @@ const Header = () => {
 
       {/* Login/Logout a destra */}
       <div>
-        <Button text="Login" />
+        <Button
+          onClickHandler={() => (window.location.href = "/login")}
+          text="Login"
+        />
       </div>
     </div>
   );

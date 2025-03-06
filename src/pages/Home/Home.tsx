@@ -1,20 +1,22 @@
-import { FormField } from "../../types/FormFieldType";
-import Form from "../../ui/Form";
+import { useEffect } from "react";
+import workoutServices from "../../services/WorkoutServices";
 
 const Home = () => {
-  const fields: FormField[] = [
-    { name: "Email", type: "email", placeholder: "Enter your email" },
-    { name: "Password", type: "password", placeholder: "Enter your password" },
-  ];
-  return (
-    <div>
-      <Form
-        className="grid grid-cols-2 gap-5"
-        fields={fields}
-        onSubmit={(values) => console.log("submit", values)}
-      />
-    </div>
-  );
+  const getWorkouts = async () => {
+    try {
+      const response = await workoutServices.getList();
+      const response2 = await workoutServices.getMuscleGroupsList();
+      console.log("response", response);
+      console.log("response2", response2);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  useEffect(() => {
+    getWorkouts();
+  }, []);
+
+  return <div>Home</div>;
 };
 
 export default Home;

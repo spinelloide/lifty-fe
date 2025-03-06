@@ -4,7 +4,7 @@ import Input from "./Input";
 
 type FormProps = {
   fields: FormField[];
-  onSubmit: (values: { [key: string]: string }) => void;
+  onSubmit: (values: any) => void;
   className?: string;
 };
 

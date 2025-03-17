@@ -1,38 +1,61 @@
 import Button from "../../ui/Button";
+import authServices from "../../services/AuthServices";
+import { routes } from "../../utils/routes/routes";
+import PrimaryButton from "../../ui/PrimaryButton";
 
 const Header = () => {
+  const authData = authServices.getLoginData();
+
+  const handleLogout = () => {
+    authServices.clearLoginData();
+    window.location.reload();
+  };
+
+  const navigateTo = (link: string) => {
+    window.location.href = link;
+  };
+
   return (
-    <div className="flex justify-between items-center py-6 px-20 bg-zinc-900 text-white h-[15vh] border-b">
-      {/* Logo a sinistra */}
-      <div className="text-xl font-bold">Logo</div>
-
-      {/* Menu centrale */}
-      <div className="flex justify-center items-center w-full">
-        <div className="flex w-full gap-5 justify-center items-center">
-          <a
-            href="/"
-            className="hover:text-gray-400">
-            Home
-          </a>
-          <a
-            href="/about"
-            className="hover:text-gray-400">
-            About
-          </a>
-          <a
-            href="/services"
-            className="hover:text-gray-400">
-            Services
-          </a>{" "}
+    <div className="flex justify-between items-center py-6 px-20 bg-transparent text-white h-[15vh] absolute top-0 w-screen  ">
+      <div className="bg-white items-center w-full flex p-4 rounded-lg mx-auto max-w-7xl">
+        {/* Logo a sinistra */}
+        <div
+          onClick={() => navigateTo(routes.HOME)}
+          className="text-xl font-bold cursor-pointer text-black"
+        >
+          Lifty
         </div>
-      </div>
-
-      {/* Login/Logout a destra */}
-      <div>
-        <Button
-          onClickHandler={() => (window.location.href = "/login")}
-          text="Login"
-        />
+        {/* Menu centrale */}
+        <div className="flex justify-center items-center w-full">
+          <div className="flex w-full gap-10 justify-center items-center">
+            <Button
+              text="Home"
+              classNames="bg-black text-white"
+              onClickHandler={() => navigateTo(routes.HOME)}
+            />
+            <Button
+              text="About"
+              classNames="bg-black text-white"
+              onClickHandler={() => navigateTo(routes.ABOUT)}
+            />
+            <Button
+              text="Services"
+              classNames="bg-black text-white"
+              onClickHandler={() => navigateTo(routes.HOME)}
+            />
+          </div>
+        </div>
+        {/* Login/Logout a destra */}
+        <div>
+          {!authData ? (
+            <PrimaryButton
+              text="Login"
+              onClickHandler={() => (window.location.href = routes.LOGIN)}
+            />
+          ) : (
+            <PrimaryButton onClickHandler={handleLogout} text="Logout" />
+          )}
+        </div>{" "}
       </div>
     </div>
   );

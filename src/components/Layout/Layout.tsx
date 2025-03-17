@@ -5,7 +5,16 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-  return <div className="bg-zinc-900 h-[85vh] pt-10 px-20">{children}</div>;
+  return (
+    <div
+      style={{
+        paddingTop: "15vh",
+      }}
+      className="bg-gradient-to-br from-black via-gray-900 to-black h-screen pt-10 px-20"
+    >
+      {children}
+    </div>
+  );
 }
 
 export default Layout;

@@ -2,12 +2,11 @@
 #root {
   min-height: 100vh;
 }
-* {
-  margin: 0;
-  box-sizing: border-box;
-}
 
 body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   height: 100vh;
   width: 100vw;
 }
@@ -17,4 +16,8 @@ body {
 }
 .bg-primary {
   background-color: #ff9243;
+}
+
+.border-primary {
+  border-color: #ff9243;
 }

@@ -6,9 +6,15 @@ type FormProps = {
   fields: FormField[];
   onSubmit: (values: any) => void;
   className?: string;
+  isLoading?: boolean;
 };
 
-const Form = ({ fields, onSubmit, className }: FormProps) => {
+const Form = ({
+  fields,
+  onSubmit,
+  className,
+  isLoading = false,
+}: FormProps) => {
   // Stato per gestire i valori dei campi
   const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
 
@@ -25,21 +31,19 @@ const Form = ({ fields, onSubmit, className }: FormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formValues); // Invoca la funzione onSubmit passando i valori del form
+    setFormValues({}); // Reset form values after submission
   };
 
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-        className={`space-y-4 flex flex-col gap-4`}>
+      <form onSubmit={handleSubmit}>
         <div className={className}>
           {fields.map((field) => (
-            <div
-              key={field.name}
-              className="flex flex-col gap-2">
+            <div key={field.name} className="flex flex-col gap-2">
               <label
                 htmlFor={field.name}
-                className="text-md text-white/80 font-semibold">
+                className="text-md text-white/80 font-semibold"
+              >
                 {field.label}
               </label>
               <Input
@@ -52,10 +56,12 @@ const Form = ({ fields, onSubmit, className }: FormProps) => {
             </div>
           ))}{" "}
         </div>
-        <div>
+        <div className="mt-4">
           <button
             type="submit"
-            className="cursor-pointer text-white font-semibold px-4 py-2 bg-orange-400 hover:bg-orange-500 transition-all duration-200 rounded-md">
+            disabled={isLoading}
+            className="cursor-pointer text-white font-semibold px-4 py-2 bg-orange-400 hover:bg-orange-500 transition-all duration-200 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Submit
           </button>
         </div>

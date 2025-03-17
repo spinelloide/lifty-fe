@@ -1,8 +1,9 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
+import { Workout } from "../types/Workout";
 
 class WorkoutServices {
-  async getList() {
+  async getList(): Promise<Workout[]> {
     try {
       const response = await axios.get(`${environment.apiUrl}/workout/list`);
       return response.data;
@@ -14,7 +15,9 @@ class WorkoutServices {
 
   async getMuscleGroupsList() {
     try {
-      const response = await axios.get(`${environment.apiUrl}/workout/muscle_groups/list`);
+      const response = await axios.get(
+        `${environment.apiUrl}/workout/muscle_groups/list`
+      );
       return response.data;
     } catch (error) {
       console.error("Errore nel recupero degli allenamenti:", error);

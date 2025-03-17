@@ -7,7 +7,7 @@ import Login from "./pages/Login/Login";
 
 function App() {
   return (
-    <div className="bg-zinc-900 h-[85vh] p-6">
+    <div className="">
       <Router>
         <Routes>
           <Route

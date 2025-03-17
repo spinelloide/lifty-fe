@@ -40,7 +40,7 @@ const Form = ({ fields, onSubmit, className }: FormProps) => {
               <label
                 htmlFor={field.name}
                 className="text-md text-white/80 font-semibold">
-                {field.name}
+                {field.label}
               </label>
               <Input
                 type={field.type}

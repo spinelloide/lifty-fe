@@ -2,7 +2,7 @@ import Button from "../../ui/Button";
 
 const Header = () => {
   return (
-    <div className="flex justify-between items-center p-6 bg-zinc-900 text-white h-[15vh] border-b">
+    <div className="flex justify-between items-center py-6 px-20 bg-zinc-900 text-white h-[15vh] border-b">
       {/* Logo a sinistra */}
       <div className="text-xl font-bold">Logo</div>
 

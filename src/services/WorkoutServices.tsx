@@ -24,6 +24,19 @@ class WorkoutServices {
       throw error;
     }
   }
+
+  async createWorkout(workoutData: { title: string; description: string; training_days: number; user_id: number }) {
+    try {
+      const response = await axios.post(
+        `${environment.apiUrl}/workout/create`,
+        workoutData
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nella creazione dell'allenamento:", error);
+      throw error;
+    }
+  }
 }
 
 const workoutServices = new WorkoutServices();

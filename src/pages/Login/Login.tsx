@@ -1,28 +1,13 @@
 import authServices from "../../services/AuthServices";
 import { FormField } from "../../types/FormFieldType";
-import { User } from "../../types/User";
+import { LoginForm } from "../../types/LoginForm";
 import Form from "../../ui/Form";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../utils/routes/routes";
 
 const Login = () => {
+  const navigate = useNavigate();
   const fields: FormField[] = [
-    {
-      label: "Name",
-      name: "name",
-      type: "text",
-      placeholder: "Enter your name",
-    },
-    {
-      label: "Surname",
-      name: "surname",
-      type: "text",
-      placeholder: "Enter your surname",
-    },
-    {
-      label: "Username",
-      name: "username",
-      type: "text",
-      placeholder: "Enter your username",
-    },
     {
       label: "Email",
       name: "email",
@@ -37,12 +22,13 @@ const Login = () => {
     },
   ];
 
-  const handleSignup = async (values: User) => {
+  const handleLogin = async (values: LoginForm) => {
     try {
-      const response = await authServices.signUp(values);
-      console.log("response", response);
+      const response = await authServices.login(values.email, values.password);
+      console.log("login response", response);
+      navigate(routes.HOME);
     } catch (error) {
-      console.log("error", error);
+      console.log("login error", error);
     }
   };
 
@@ -51,7 +37,7 @@ const Login = () => {
       <Form
         className="grid grid-cols-2 gap-5"
         fields={fields}
-        onSubmit={(values) => handleSignup(values)}
+        onSubmit={(values) => handleLogin(values)}
       />
     </div>
   );

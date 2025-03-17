@@ -5,4 +5,5 @@ export interface Workout {
   description: string;
   training_days: number;
   user_id: number;
+  is_ready: boolean;
 }

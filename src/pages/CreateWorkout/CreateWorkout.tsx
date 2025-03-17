@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import Form from "../../ui/Form";
 import { FormField } from "../../types/FormFieldType";
+import authServices from "../../services/AuthServices";
 import workoutServices from "../../services/WorkoutServices";
+import { useState } from "react";
 
 const CreateWorkout = () => {
-  const navigate = useNavigate();
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const fields: FormField[] = [
     {
@@ -27,14 +28,36 @@ const CreateWorkout = () => {
     },
   ];
 
+  const handleSubmit = async (values: { [key: string]: string }) => {
+    setLoadingSubmit(true);
+    try {
+      await workoutServices.createWorkout({
+        title: values.title,
+        description: values.description,
+        training_days: Number(values.days),
+        user_id: authServices.getLoginData()?.user.id ?? 0,
+      });
+
+      setLoadingSubmit(false);
+    } catch (error) {
+      console.error("Error creating workout:", error);
+      setLoadingSubmit(false);
+    }
+  };
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 text-white">Create New Workout</h1>
-      <Form
-        fields={fields}
-        onSubmit={() => console.log("ciao")}
-        className="max-w-md"
-      />
+    <div className="p-4 flex flex-col items-center ">
+      <div className="max-w-md w-full">
+        <h1 className="text-2xl font-bold mb-3 text-white">
+          Create New Workout
+        </h1>
+        <Form
+          className="flex flex-col gap-4"
+          fields={fields}
+          isLoading={loadingSubmit}
+          onSubmit={(values) => handleSubmit(values)}
+        />
+      </div>
     </div>
   );
 };

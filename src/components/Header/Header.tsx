@@ -17,11 +17,11 @@ const Header = () => {
 
   return (
     <div className="flex justify-between items-center py-6 px-20 bg-transparent text-white h-[15vh] absolute top-0 w-screen  ">
-      <div className="bg-white items-center w-full flex p-4 rounded-lg mx-auto max-w-7xl">
+      <div className="bg-gray-900 border-2 border-gray-800 items-center w-full flex p-4 rounded-lg mx-auto max-w-7xl">
         {/* Logo a sinistra */}
         <div
           onClick={() => navigateTo(routes.HOME)}
-          className="text-xl font-bold cursor-pointer text-black"
+          className="text-xl font-bold cursor-pointer text-white"
         >
           Lifty
         </div>
@@ -30,17 +30,17 @@ const Header = () => {
           <div className="flex w-full gap-10 justify-center items-center">
             <Button
               text="Home"
-              classNames="bg-black text-white"
+              classNames="bg-transparent  text-white"
               onClickHandler={() => navigateTo(routes.HOME)}
             />
             <Button
               text="About"
-              classNames="bg-black text-white"
+              classNames="bg-transparent  text-white"
               onClickHandler={() => navigateTo(routes.ABOUT)}
             />
             <Button
               text="Services"
-              classNames="bg-black text-white"
+              classNames="bg-transparent  text-white"
               onClickHandler={() => navigateTo(routes.HOME)}
             />
           </div>

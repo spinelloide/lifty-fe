@@ -12,6 +12,17 @@ class WorkoutServices {
       throw error;
     }
   }
+  async getWorkoutById(workoutId: number): Promise<Workout> {
+    try {
+      const response = await axios.get(
+        `${environment.apiUrl}/workout/${workoutId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nel recupero degli allenamenti:", error);
+      throw error;
+    }
+  }
 
   async getMuscleGroupsList() {
     try {
@@ -25,7 +36,12 @@ class WorkoutServices {
     }
   }
 
-  async createWorkout(workoutData: { title: string; description: string; training_days: number; user_id: number }) {
+  async createWorkout(workoutData: {
+    title: string;
+    description: string;
+    training_days: number;
+    user_id: number;
+  }) {
     try {
       const response = await axios.post(
         `${environment.apiUrl}/workout/create`,

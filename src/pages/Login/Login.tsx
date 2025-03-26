@@ -3,7 +3,7 @@ import { FormField } from "../../types/FormFieldType";
 import { LoginForm } from "../../types/LoginForm";
 import Form from "../../ui/Form";
 import { useNavigate } from "react-router-dom";
-import { routes } from "../../utils/routes/routes";
+import { routes } from "../../utils/routes";
 
 const Login = () => {
   const navigate = useNavigate();

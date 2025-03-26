@@ -60,10 +60,23 @@ const AddExercise = ({
     value: string | number
   ) => {
     const updatedExercises = [...exercises];
-    updatedExercises[index] = {
-      ...updatedExercises[index],
-      [field]: value,
-    };
+
+    if (field === "muscle_group") {
+      updatedExercises[index] = {
+        ...updatedExercises[index],
+        muscle_group: value as string,
+        name: "",
+        sets: 1,
+        reps: 1,
+        rest_time: 30,
+      };
+    } else {
+      updatedExercises[index] = {
+        ...updatedExercises[index],
+        [field]: value,
+      };
+    }
+
     setExercises(updatedExercises);
   };
 

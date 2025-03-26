@@ -31,7 +31,7 @@ class ExerciseServices {
   createExercise = async (exercise: Exercise): Promise<Exercise> => {
     try {
       const response = await axios.post(
-        "${environment.apiUrl}/user/exercises",
+        `${environment.apiUrl}/exercise`,
         exercise
       );
       return response.data;

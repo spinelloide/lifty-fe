@@ -1,6 +1,6 @@
 import Button from "../../ui/Button";
 import authServices from "../../services/AuthServices";
-import { routes } from "../../utils/routes/routes";
+import { routes } from "../../utils/routes";
 import PrimaryButton from "../../ui/PrimaryButton";
 
 const Header = () => {

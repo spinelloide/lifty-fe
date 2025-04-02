@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Exercise } from "../../types/Exercise";
-import workoutServices from "../../services/WorkoutServices";
-import exerciseServices from "../../services/ExerciseServices";
+import { Exercise } from "../types/Exercise";
+import workoutServices from "../services/WorkoutServices";
+import exerciseServices from "../services/ExerciseServices";
 
 interface AddExerciseProps {
   onSubmit: (exercise: Exercise) => void;
@@ -12,7 +12,6 @@ interface AddExerciseProps {
 
 const AddExercise = ({
   onSubmit,
-  onClose,
   workoutPlanId,
   selectedDay,
 }: AddExerciseProps) => {

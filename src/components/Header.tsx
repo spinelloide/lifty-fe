@@ -1,7 +1,7 @@
-import Button from "../../ui/Button";
-import authServices from "../../services/AuthServices";
-import { routes } from "../../utils/routes";
-import PrimaryButton from "../../ui/PrimaryButton";
+import Button from "../ui/Button";
+import authServices from "../services/AuthServices";
+import { routes } from "../utils/routes";
+import PrimaryButton from "../ui/PrimaryButton";
 
 const Header = () => {
   const authData = authServices.getLoginData();

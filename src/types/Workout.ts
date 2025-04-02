@@ -4,6 +4,7 @@ export interface Workout {
   title: string;
   description: string;
   training_days: number;
+  duration: number;
   user_id: number;
   is_ready: boolean;
 }

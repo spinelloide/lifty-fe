@@ -1,14 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Exercise } from "../../types/Exercise";
+import { toast } from "react-toastify";
 
 import Modal from "../../ui/Modal";
-import AddExercise from "../../components/AddExercise/AddExercise";
-import Loader from "../../components/Loading/Loader";
+import Loader from "../../components/Loader";
 import exerciseServices from "../../services/ExerciseServices";
 import workoutServices from "../../services/WorkoutServices";
 import { Workout } from "../../types/Workout";
 import { getMuscleGroupTitle } from "../../utils/stringUtils";
+import AddExercise from "../../components/AddExercise";
 
 const ExercisePage = () => {
   const { id } = useParams();
@@ -80,15 +81,18 @@ const ExercisePage = () => {
   }, {} as Record<string, Exercise[]>);
 
   const handleSubmitExercise = async (exercise: Exercise) => {
-    console.log("exercise", exercise);
     try {
       await exerciseServices.createExercise(exercise);
       setExercises((prevExercises) => [...prevExercises, exercise]);
       setIsModalOpen(false);
+      toast.success("Exercise added successfully!");
     } catch (error) {
       console.error("Error creating exercise:", error);
+      toast.error("Failed to add exercise. Please try again.");
     }
   };
+
+  console.log("workoutInfo", workoutInfo);
 
   return (
     <div className="p-8">

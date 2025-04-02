@@ -40,6 +40,7 @@ class WorkoutServices {
     title: string;
     description: string;
     training_days: number;
+    duration: number;
     user_id: number;
   }) {
     try {
@@ -50,6 +51,18 @@ class WorkoutServices {
       return response.data;
     } catch (error) {
       console.error("Errore nella creazione dell'allenamento:", error);
+      throw error;
+    }
+  }
+
+  async deleteWorkout(workoutId: number) {
+    try {
+      const response = await axios.delete(
+        `${environment.apiUrl}/workout/delete/${workoutId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nella cancellazione dell'allenamento:", error);
       throw error;
     }
   }

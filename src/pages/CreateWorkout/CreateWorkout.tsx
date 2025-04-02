@@ -3,8 +3,12 @@ import { FormField } from "../../types/FormFieldType";
 import authServices from "../../services/AuthServices";
 import workoutServices from "../../services/WorkoutServices";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { routes } from "../../utils/routes";
 
 const CreateWorkout = () => {
+  const navigate = useNavigate();
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const fields: FormField[] = [
@@ -16,15 +20,21 @@ const CreateWorkout = () => {
     },
     {
       name: "description",
-      label: "Description",
+      label: "Note",
       type: "text",
       placeholder: "Enter workout description",
     },
     {
       name: "days",
-      label: "Days",
+      label: "Training Days",
       type: "number",
       placeholder: "Enter number of days",
+    },
+    {
+      name: "duration",
+      label: "Training Duration",
+      type: "number",
+      placeholder: "How long does your workout last?",
     },
   ];
 
@@ -35,28 +45,37 @@ const CreateWorkout = () => {
         title: values.title,
         description: values.description,
         training_days: Number(values.days),
+        duration: Number(values.duration),
         user_id: authServices.getLoginData()?.user.id ?? 0,
       });
 
+      toast.success("Workout creato con successo!");
       setLoadingSubmit(false);
+      navigate(routes.HOME);
     } catch (error) {
       console.error("Error creating workout:", error);
+      toast.error("Errore durante la creazione del workout");
       setLoadingSubmit(false);
     }
   };
 
   return (
-    <div className="p-4 flex flex-col items-center ">
-      <div className="max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-3 text-white">
+    <div className="p-8 flex flex-col items-center min-h-screen">
+      <div className="max-w-md w-full bg-gray-800/50 p-6 rounded-lg shadow-xl">
+        <h1 className="text-3xl font-bold mb-6 text-white text-center">
           Create New Workout
         </h1>
         <Form
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-6"
           fields={fields}
           isLoading={loadingSubmit}
           onSubmit={(values) => handleSubmit(values)}
         />
+        {loadingSubmit && (
+          <div className="mt-4 text-center text-orange-400">
+            Creating your workout...
+          </div>
+        )}
       </div>
     </div>
   );

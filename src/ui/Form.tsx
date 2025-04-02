@@ -5,6 +5,7 @@ import Input from "./Input";
 type FormProps = {
   fields: FormField[];
   onSubmit: (values: any) => void;
+  submitText?: string;
   className?: string;
   isLoading?: boolean;
 };
@@ -13,6 +14,7 @@ const Form = ({
   fields,
   onSubmit,
   className,
+  submitText = "Submit",
   isLoading = false,
 }: FormProps) => {
   // Stato per gestire i valori dei campi
@@ -62,7 +64,7 @@ const Form = ({
             disabled={isLoading}
             className="cursor-pointer text-white font-semibold px-4 py-2 bg-orange-400 hover:bg-orange-500 transition-all duration-200 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit
+            {submitText}
           </button>
         </div>
       </form>{" "}

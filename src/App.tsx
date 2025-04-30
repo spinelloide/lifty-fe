@@ -11,43 +11,46 @@ import Signup from "./pages/Signup/Signup";
 import ExercisePage from "./pages/ExercisePage/ExercisePage";
 import PrivateRoute from "./components/PrivateRoute";
 import StartWorkout from "./pages/StartWorkout/StartWorkout";
+import Layout from "./components/Layout";
 
 function App() {
   return (
     <div className="">
       <Router>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-        <Routes>
-          <Route
-            path={routes.HOME}
-            element={<PrivateRoute element={<Home />} />}
+        <Layout>
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
           />
-          <Route path={routes.ABOUT} element={<About />} />
-          <Route
-            path={routes.CREATE_WORKOUT}
-            element={<PrivateRoute element={<CreateWorkout />} />}
-          />
-          <Route path={routes.SIGNUP} element={<Signup />} />
-          <Route path={routes.LOGIN} element={<Login />} />
-          <Route
-            path={routes.ADD_EXERCISES}
-            element={<PrivateRoute element={<ExercisePage />} />}
-          />
-          <Route
-            path={`${routes.START_WORKOUT}/:id`}
-            element={<PrivateRoute element={<StartWorkout />} />}
-          />
-        </Routes>
+          <Routes>
+            <Route
+              path={routes.HOME}
+              element={<PrivateRoute element={<Home />} />}
+            />
+            <Route path={routes.ABOUT} element={<About />} />
+            <Route
+              path={routes.CREATE_WORKOUT}
+              element={<PrivateRoute element={<CreateWorkout />} />}
+            />
+            <Route path={routes.SIGNUP} element={<Signup />} />
+            <Route path={routes.LOGIN} element={<Login />} />
+            <Route
+              path={routes.ADD_EXERCISES}
+              element={<PrivateRoute element={<ExercisePage />} />}
+            />
+            <Route
+              path={`${routes.START_WORKOUT}/:id`}
+              element={<PrivateRoute element={<StartWorkout />} />}
+            />
+          </Routes>
+        </Layout>
       </Router>
     </div>
   );

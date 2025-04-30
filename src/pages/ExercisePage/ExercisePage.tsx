@@ -14,31 +14,20 @@ import AddExercise from "../../components/AddExercise";
 import { MdOutlineRepeat } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import { IoIosFitness } from "react-icons/io";
+import workoutDayServices from "../../services/WorkoutDayServices";
+import { WorkoutDay } from "../../types/WorkoutDay";
 
 const ExercisePage = () => {
   const { id } = useParams();
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
+
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [workoutInfo, setWorkoutInfo] = useState<Workout | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const fetchExercises = async () => {
-    try {
-      if (id) {
-        const data = await exerciseServices.getExerciseList(parseInt(id));
-        setExercises(data);
-      }
-    } catch (err) {
-      console.error("Error fetching exercises:", err);
-      setError("Failed to fetch exercises");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const fetchWorkoutDetail = async () => {
     try {
       if (id) {
@@ -53,8 +42,40 @@ const ExercisePage = () => {
     }
   };
 
+  const fetchExercises = async () => {
+    try {
+      if (id) {
+        const data = await exerciseServices.getExerciseList(parseInt(id));
+        setExercises(data);
+      }
+    } catch (err) {
+      console.error("Error fetching exercises:", err);
+      setError("Failed to fetch exercises");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchDays = async () => {
+    try {
+      if (id) {
+        const data = await workoutDayServices.listDaysByWorkoutPlanId(
+          parseInt(id)
+        );
+
+        setSelectedDay(data[0].id);
+        setWorkoutDays(data);
+      }
+    } catch (err) {
+      console.error("Error fetching exercises:", err);
+      setError("Failed to fetch exercises");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchExercises();
+    fetchDays();
     fetchWorkoutDetail();
   }, [id]);
 
@@ -97,6 +118,8 @@ const ExercisePage = () => {
     }
   };
 
+  console.log("groupedExercises", groupedExercises);
+
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
@@ -105,51 +128,29 @@ const ExercisePage = () => {
             <h1 className="text-4xl font-bold text-white tracking-tight">
               {workoutInfo?.title}
             </h1>
-            {/* <div className="flex flex-row-reverse items-center gap-2">
-              <h4
-                className={`text-lg ${
-                  workoutStatus ? "text-green-300" : "text-red-400"
-                }`}
-              >
-                {workoutStatus ? "Attivo" : "Non attivo"}
-              </h4>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={workoutStatus}
-                  onChange={(e) => {
-                    handleUpdateWOrkoutStatus(e.target.checked);
-                  }}
-                />
-                <div className="w-11 h-6 bg-gray-600  rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
-              </label>{" "}
-            </div> */}
           </div>{" "}
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => setIsModalOpen(true)}
               className="cursor-pointer px-6 py-2 border-2 bg-transparent border-primary rounded-lg backdrop-blur-lg text-primary hover:bg-white/20 transition-all"
             >
-              Add Exercise to day {selectedDay}
+              Add Exercise to day{" "}
+              {workoutDays.findIndex((el) => el.id === selectedDay) + 1}
             </button>
           </div>
         </div>
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {Array.from(
-            { length: workoutInfo?.training_days ?? 0 },
-            (_, i) => i + 1
-          ).map((day) => (
+          {workoutDays.map((day, idx) => (
             <button
-              key={day}
-              onClick={() => setSelectedDay(day)}
+              key={day.id}
+              onClick={() => setSelectedDay(day.id)}
               className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
-                selectedDay === day
+                selectedDay === day.id
                   ? "bg-white/20 text-white"
                   : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
               }`}
             >
-              Day {day}
+              Day {idx + 1}
             </button>
           ))}
         </div>

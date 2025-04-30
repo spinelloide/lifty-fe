@@ -3,12 +3,13 @@ import { FormField } from "../../types/FormFieldType";
 import authServices from "../../services/AuthServices";
 import workoutServices from "../../services/WorkoutServices";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-toastify";
 import { routes } from "../../utils/routes";
+import { navigateAfterSubmit } from "../../utils/funcUtils";
+import { sendToast } from "../../utils/toastUtils";
 
 const CreateWorkout = () => {
-  const navigate = useNavigate();
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const fields: FormField[] = [
@@ -32,7 +33,7 @@ const CreateWorkout = () => {
     },
     {
       name: "duration",
-      label: "Training Duration",
+      label: "Duration (weeks)",
       type: "number",
       placeholder: "How long does your workout last?",
     },
@@ -49,9 +50,10 @@ const CreateWorkout = () => {
         user_id: authServices.getLoginData()?.user.id ?? 0,
       });
 
-      toast.success("Workout creato con successo!");
       setLoadingSubmit(false);
-      navigate(routes.HOME);
+      sendToast("success", "Workout creato con successo");
+
+      navigateAfterSubmit(routes.HOME);
     } catch (error) {
       console.error("Error creating workout:", error);
       toast.error("Errore durante la creazione del workout");

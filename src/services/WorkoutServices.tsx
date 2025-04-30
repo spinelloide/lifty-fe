@@ -1,6 +1,7 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
 import { Workout } from "../types/Workout";
+import workoutDayServices from "./WorkoutDayServices";
 
 class WorkoutServices {
   async getList(): Promise<Workout[]> {
@@ -42,12 +43,19 @@ class WorkoutServices {
     training_days: number;
     duration: number;
     user_id: number;
-  }) {
+  }): Promise<Workout> {
     try {
       const response = await axios.post(
         `${environment.apiUrl}/workout/create`,
         workoutData
       );
+
+      Array.from({ length: workoutData.training_days }).forEach(() => {
+        workoutDayServices.addWorkoutDay({
+          workout_plan_id: response.data.id,
+          count: 8,
+        });
+      });
       return response.data;
     } catch (error) {
       console.error("Errore nella creazione dell'allenamento:", error);
@@ -63,6 +71,22 @@ class WorkoutServices {
       return response.data;
     } catch (error) {
       console.error("Errore nella cancellazione dell'allenamento:", error);
+      throw error;
+    }
+  }
+
+  async updateWorkoutStatus(workoutId: number, status: boolean) {
+    try {
+      const response = await axios.put(
+        `${environment.apiUrl}/workout/status/${workoutId}`,
+        { isActive: status }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Errore nell'aggiornamento dello stato dell'allenamento:",
+        error
+      );
       throw error;
     }
   }

@@ -10,23 +10,23 @@ import CreateWorkout from "./pages/CreateWorkout/CreateWorkout";
 import Signup from "./pages/Signup/Signup";
 import ExercisePage from "./pages/ExercisePage/ExercisePage";
 import PrivateRoute from "./components/PrivateRoute";
+import StartWorkout from "./pages/StartWorkout/StartWorkout";
 
 function App() {
   return (
     <div className="">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <Router>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <Routes>
           <Route
             path={routes.HOME}
@@ -42,6 +42,10 @@ function App() {
           <Route
             path={routes.ADD_EXERCISES}
             element={<PrivateRoute element={<ExercisePage />} />}
+          />
+          <Route
+            path={`${routes.START_WORKOUT}/:id`}
+            element={<PrivateRoute element={<StartWorkout />} />}
           />
         </Routes>
       </Router>

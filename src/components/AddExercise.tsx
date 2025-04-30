@@ -223,9 +223,7 @@ const AddExercise = ({
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Rest Time (s)
                 </label>
-                <input
-                  type="number"
-                  min="0"
+                <select
                   value={exercise.rest_time}
                   disabled={!exercise.name}
                   onChange={(e) =>
@@ -235,8 +233,14 @@ const AddExercise = ({
                       parseInt(e.target.value)
                     )
                   }
-                  className="w-full bg-white/10 border-0 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-primary disabled:opacity-30"
-                />
+                  className="disabled:opacity-30 w-full bg-white/10 border-0 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-primary"
+                >
+                  <option value="30">30</option>
+                  <option value="60">60</option>
+                  <option value="90">90</option>
+                  <option value="120">120</option>
+                  <option value="150">150</option>
+                </select>
               </div>
             </div>
           </div>

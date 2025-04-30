@@ -27,6 +27,20 @@ class ExerciseServices {
       throw error;
     }
   };
+  getExercisesListByWorkoutPlanAndDay = async (
+    workoutPlanId: number,
+    day: number
+  ): Promise<Exercise[]> => {
+    try {
+      const response = await axios.get(
+        `${environment.apiUrl}/exercise/list/${workoutPlanId}/${day}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+      throw error;
+    }
+  };
 
   createExercise = async (exercise: Exercise): Promise<Exercise> => {
     try {

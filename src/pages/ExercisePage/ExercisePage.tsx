@@ -11,6 +11,10 @@ import { Workout } from "../../types/Workout";
 import { getMuscleGroupTitle } from "../../utils/stringUtils";
 import AddExercise from "../../components/AddExercise";
 
+import { MdOutlineRepeat } from "react-icons/md";
+import { IoMdTime } from "react-icons/io";
+import { IoIosFitness } from "react-icons/io";
+
 const ExercisePage = () => {
   const { id } = useParams();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -20,6 +24,7 @@ const ExercisePage = () => {
   const [workoutInfo, setWorkoutInfo] = useState<Workout | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const fetchExercises = async () => {
     try {
       if (id) {
@@ -92,15 +97,35 @@ const ExercisePage = () => {
     }
   };
 
-  console.log("workoutInfo", workoutInfo);
-
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between w-full">
-          <h1 className="text-4xl font-bold text-white tracking-tight mb-8">
-            {workoutInfo?.title}
-          </h1>{" "}
+          <div className="flex items-center gap-4 mb-8">
+            <h1 className="text-4xl font-bold text-white tracking-tight">
+              {workoutInfo?.title}
+            </h1>
+            {/* <div className="flex flex-row-reverse items-center gap-2">
+              <h4
+                className={`text-lg ${
+                  workoutStatus ? "text-green-300" : "text-red-400"
+                }`}
+              >
+                {workoutStatus ? "Attivo" : "Non attivo"}
+              </h4>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={workoutStatus}
+                  onChange={(e) => {
+                    handleUpdateWOrkoutStatus(e.target.checked);
+                  }}
+                />
+                <div className="w-11 h-6 bg-gray-600  rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+              </label>{" "}
+            </div> */}
+          </div>{" "}
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => setIsModalOpen(true)}
@@ -143,10 +168,19 @@ const ExercisePage = () => {
                   <h3 className="text-xl font-semibold mb-2">
                     {exercise.name}
                   </h3>
-                  <div className="flex justify-between text-sm">
-                    <span>{exercise.sets} sets</span>
-                    <span>{exercise.reps} reps</span>
-                    <span>{exercise.rest_time}s rest</span>
+                  <div className="flex justify-between text-sm mt-4 pt-4 border-t border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <IoIosFitness className="text-orange-400 w-4 h-4" />
+                      <span>{exercise.sets} sets</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MdOutlineRepeat className="text-orange-400 w-4 h-4" />
+                      <span>{exercise.reps} reps</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <IoMdTime className="text-orange-400 w-4 h-4" />
+                      <span>{exercise.rest_time}s rest</span>
+                    </div>
                   </div>
                 </div>
               ))}

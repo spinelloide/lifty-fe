@@ -2,6 +2,8 @@ import Button from "../ui/Button";
 import authServices from "../services/AuthServices";
 import { routes } from "../utils/routes";
 import PrimaryButton from "../ui/PrimaryButton";
+import { menuItems } from "../utils/menu";
+import Account from "./Account";
 
 const Header = () => {
   const authData = authServices.getLoginData();
@@ -21,28 +23,21 @@ const Header = () => {
         {/* Logo a sinistra */}
         <div
           onClick={() => navigateTo(routes.HOME)}
-          className="text-xl font-bold cursor-pointer text-white"
+          className="text-2xl text-orange-300 font-bold cursor-pointer"
         >
           Lifty
         </div>
         {/* Menu centrale */}
         <div className="flex justify-center items-center w-full">
           <div className="flex w-full gap-10 justify-center items-center">
-            <Button
-              text="Home"
-              classNames="bg-transparent  text-white"
-              onClickHandler={() => navigateTo(routes.HOME)}
-            />
-            <Button
-              text="About"
-              classNames="bg-transparent  text-white"
-              onClickHandler={() => navigateTo(routes.ABOUT)}
-            />
-            <Button
-              text="Services"
-              classNames="bg-transparent  text-white"
-              onClickHandler={() => navigateTo(routes.HOME)}
-            />
+            {menuItems.map((el) => (
+              <Button
+                key={el.label}
+                text={el.label}
+                classNames="bg-transparent  text-white"
+                onClickHandler={() => navigateTo(el.href)}
+              />
+            ))}
           </div>
         </div>
         {/* Login/Logout a destra */}
@@ -53,7 +48,10 @@ const Header = () => {
               onClickHandler={() => (window.location.href = routes.LOGIN)}
             />
           ) : (
-            <PrimaryButton onClickHandler={handleLogout} text="Logout" />
+            <Account
+              onLogout={handleLogout}
+              onSettingsClick={() => console.log("settings")}
+            />
           )}
         </div>{" "}
       </div>

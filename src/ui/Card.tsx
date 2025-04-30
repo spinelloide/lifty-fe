@@ -13,11 +13,12 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`p-6 shadow-lg rounded-xl bg-white/10 backdrop-blur-sm hover:shadow-xl hover:scale-105 transition-all duration-300 ${className}`}
+      className={`p-6 z-99 shadow-lg rounded-t-xl bg-white/10 backdrop-blur-sm  ${className}`}
       style={{
         width: `${width}rem`,
         height: `${height}rem`,
-      }}>
+      }}
+    >
       {children}
     </div>
   );

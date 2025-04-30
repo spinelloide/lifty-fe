@@ -7,4 +7,5 @@ export interface Workout {
   duration: number;
   user_id: number;
   is_ready: boolean;
+  is_active: boolean;
 }

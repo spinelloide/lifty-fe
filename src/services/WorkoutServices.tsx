@@ -4,9 +4,11 @@ import { Workout } from "../types/Workout";
 import workoutDayServices from "./WorkoutDayServices";
 
 class WorkoutServices {
-  async getList(): Promise<Workout[]> {
+  async getList(userId: number): Promise<Workout[]> {
     try {
-      const response = await axios.get(`${environment.apiUrl}/workout/list`);
+      const response = await axios.get(
+        `${environment.apiUrl}/workout/list/${userId}`
+      );
       return response.data;
     } catch (error) {
       console.error("Errore nel recupero degli allenamenti:", error);

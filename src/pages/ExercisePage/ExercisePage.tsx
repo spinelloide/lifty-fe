@@ -118,8 +118,6 @@ const ExercisePage = () => {
     }
   };
 
-  console.log("groupedExercises", groupedExercises);
-
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
@@ -150,7 +148,7 @@ const ExercisePage = () => {
                   : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
               }`}
             >
-              Day {idx + 1}
+              {day.label ? day.label : `Day ${idx + 1}`}
             </button>
           ))}
         </div>

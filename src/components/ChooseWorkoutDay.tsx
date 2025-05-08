@@ -15,7 +15,10 @@ function WorkoutDaysList({ workoutDays, handleChooseDay }: Props) {
       <div className="min-w-md flex flex-col gap-2">
         {workoutDays.map((day, idx) => (
           <div key={day.id} onClick={() => handleChooseDay(day.id)}>
-            <PrimaryButton text={`Day ${idx + 1}`} classNames="w-full" />
+            <PrimaryButton
+              text={day.label ? day.label : `Day ${idx + 1}`}
+              classNames="w-full"
+            />
           </div>
         ))}{" "}
       </div>

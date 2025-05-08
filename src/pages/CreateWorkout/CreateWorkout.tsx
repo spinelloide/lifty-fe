@@ -27,7 +27,7 @@ const CreateWorkout = () => {
     },
     {
       name: "days",
-      label: "Training Days",
+      label: "Trainings per week",
       type: "number",
       placeholder: "Enter number of days",
     },

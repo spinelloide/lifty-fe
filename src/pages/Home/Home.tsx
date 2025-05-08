@@ -12,16 +12,22 @@ import workoutServices from "../../services/WorkoutServices";
 import { routes } from "../../utils/routes";
 import { sendToast } from "../../utils/toastUtils";
 import Page from "../../components/Page";
+import authServices from "../../services/AuthServices";
+
 const Home = () => {
   const navigate = useNavigate();
   const [workoutList, setWorkoutList] = useState<Workout[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [workoutToDelete, setWorkoutToDelete] = useState<number | null>(null);
 
+  const user = authServices.getLoginData();
+
   const getWorkouts = async () => {
     try {
-      const response = await workoutServices.getList();
-      setWorkoutList(response);
+      if (user) {
+        const response = await workoutServices.getList(user.user.id);
+        setWorkoutList(response);
+      }
     } catch (error) {
       console.log("error", error);
     }
@@ -91,7 +97,9 @@ const Home = () => {
             ))}
           </Grid>
           {workoutList.length === 0 && (
-            <span className="text-lg text-white w-full flex justify-center items-center h-40">Non ci sono allenamenti</span>
+            <span className="text-lg text-white w-full flex justify-center items-center h-40">
+              Non ci sono allenamenti
+            </span>
           )}
         </div>
       </Page>

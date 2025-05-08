@@ -43,10 +43,16 @@ const Header = () => {
         {/* Login/Logout a destra */}
         <div>
           {!authData ? (
-            <PrimaryButton
-              text="Login"
-              onClickHandler={() => (window.location.href = routes.LOGIN)}
-            />
+            <div className="flex gap-3">
+              <PrimaryButton
+                text="Login"
+                onClickHandler={() => (window.location.href = routes.LOGIN)}
+              />
+              <PrimaryButton
+                text="Signup"
+                onClickHandler={() => (window.location.href = routes.SIGNUP)}
+              />
+            </div>
           ) : (
             <Account
               onLogout={handleLogout}

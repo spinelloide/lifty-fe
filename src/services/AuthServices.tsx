@@ -5,7 +5,7 @@ import { User } from "../types/User";
 import { LoginResponse } from "./responses/LoginResponse";
 
 class AuthServices {
-  private readonly AUTH_KEY = 'auth_data';
+  private readonly AUTH_KEY = "auth_data";
 
   saveLoginData(data: LoginResponse) {
     localStorage.setItem(this.AUTH_KEY, JSON.stringify(data));
@@ -39,6 +39,8 @@ class AuthServices {
         `${environment.apiUrl}/auth/login`,
         { email, password }
       );
+
+      console.log("response", response);
       this.saveLoginData(response.data);
       return response.data;
     } catch (error) {

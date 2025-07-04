@@ -5,7 +5,7 @@ type Props = {
 };
 
 function Page({ children }: Props) {
-  return <div className="max-w-7xl mx-auto p-8 relative z-10">{children}</div>;
+  return <div className="max-w-7xl mx-auto p-8 relative">{children}</div>;
 }
 
 export default Page;

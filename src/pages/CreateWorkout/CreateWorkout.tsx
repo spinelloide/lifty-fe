@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { routes } from "../../utils/routes";
 import { navigateAfterSubmit } from "../../utils/funcUtils";
 import { sendToast } from "../../utils/toastUtils";
+import Page from "../../components/Page";
 
 const CreateWorkout = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -62,24 +63,26 @@ const CreateWorkout = () => {
   };
 
   return (
-    <div className="p-8 flex flex-col items-center min-h-screen">
-      <div className="max-w-md w-full bg-gray-800/50 p-6 rounded-lg shadow-xl">
-        <h1 className="text-3xl font-bold mb-6 text-white text-center">
-          Create New Workout
-        </h1>
-        <Form
-          className="flex flex-col gap-6"
-          fields={fields}
-          isLoading={loadingSubmit}
-          onSubmit={(values) => handleSubmit(values)}
-        />
-        {loadingSubmit && (
-          <div className="mt-4 text-center text-orange-400">
-            Creating your workout...
-          </div>
-        )}
+    <Page>
+      <div className="p-8 flex flex-col items-center h-full justify-center">
+        <div className="max-w-md w-full bg-gray-800/50 p-6 rounded-lg shadow-xl">
+          <h1 className="text-3xl font-bold mb-6 text-white text-center">
+            Create New Workout
+          </h1>
+          <Form
+            className="flex flex-col gap-6"
+            fields={fields}
+            isLoading={loadingSubmit}
+            onSubmit={(values) => handleSubmit(values)}
+          />
+          {loadingSubmit && (
+            <div className="mt-4 text-center text-orange-400">
+              Creating your workout...
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 

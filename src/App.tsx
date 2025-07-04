@@ -12,10 +12,11 @@ import ExercisePage from "./pages/ExercisePage/ExercisePage";
 import PrivateRoute from "./components/PrivateRoute";
 import StartWorkout from "./pages/StartWorkout/StartWorkout";
 import Layout from "./components/Layout";
+import React from "react";
 
 function App() {
   return (
-    <div className="">
+    <React.Fragment>
       <Router>
         <Layout>
           <ToastContainer
@@ -26,6 +27,7 @@ function App() {
             closeOnClick
             rtl={false}
             pauseOnFocusLoss
+            style={{ zIndex: 9999 }}
             draggable
             pauseOnHover
           />
@@ -52,7 +54,7 @@ function App() {
           </Routes>
         </Layout>
       </Router>
-    </div>
+    </React.Fragment>
   );
 }
 

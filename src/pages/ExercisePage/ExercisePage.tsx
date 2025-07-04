@@ -120,7 +120,7 @@ const ExercisePage = () => {
 
   return (
     <div className="p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-8">
         <div className="flex justify-between w-full">
           <div className="flex items-center gap-4 mb-8">
             <h1 className="text-4xl font-bold text-white tracking-tight">

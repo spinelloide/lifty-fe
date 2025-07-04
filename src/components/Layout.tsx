@@ -11,12 +11,7 @@ function Layout({ children }: LayoutProps) {
   return (
     <>
       {!location.pathname.startsWith("/start") && <Header />}
-      <div
-        style={{
-          paddingTop: "15vh",
-        }}
-        className="bg-gradient-to-br from-black via-gray-900 to-black h-screen pt-10 px-20"
-      >
+      <div className="bg-gradient-to-br from-black via-gray-900 to-black h-screen pt-32 relative">
         {children}
       </div>
     </>

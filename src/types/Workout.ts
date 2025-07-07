@@ -8,4 +8,5 @@ export interface Workout {
   user_id: number;
   is_ready: boolean;
   is_active: boolean;
+  completed_count?: number;
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Workout } from "../../types/Workout";
 import { sendToast } from "../../utils/toastUtils";
 import exerciseServices from "../../services/ExerciseServices";
+import { useNavigate } from "react-router-dom";
 
 import workoutDayServices from "../../services/WorkoutDayServices";
 import { WorkoutDay } from "../../types/WorkoutDay";
@@ -16,6 +17,7 @@ import PlainButton from "../../ui/PlainButton";
 
 function StartWorkout() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [workoutInfo, setWorkoutInfo] = useState<Workout | null>(null);
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [exercisesList, setExercisesList] = useState<any[]>([]);
@@ -27,6 +29,7 @@ function StartWorkout() {
   const [weights, setWeights] = useState<{ [key: number]: string }>({});
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
 
   const handleWeightChange = (exerciseId: number, value: string) => {
     setWeights((prev) => ({
@@ -34,6 +37,8 @@ function StartWorkout() {
       [exerciseId]: value,
     }));
   };
+
+  console.log("weights", weights);
 
   const handleExerciseComplete = (exerciseId: number) => {
     setCompletedExercises((prev) => {
@@ -48,6 +53,12 @@ function StartWorkout() {
     fetchDays();
     fetchWorkoutDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (!isModalOpen && selectedDayId === null) {
+      navigate("/");
+    }
+  }, [isModalOpen, selectedDayId, navigate]);
 
   const fetchWorkoutDetail = async () => {
     try {
@@ -91,6 +102,7 @@ function StartWorkout() {
           );
         console.log("response", response);
         setExercisesList(response);
+        setSelectedDayId(dayId);
       }
     } catch (err) {
       console.error("Error fetching exercises:", err);
@@ -119,16 +131,33 @@ function StartWorkout() {
     setIsRunning(!isRunning);
   };
 
+  const handleCompleteWorkout = async () => {
+    if (!selectedDayId) {
+      sendToast("error", "Seleziona un giorno di allenamento");
+      return;
+    }
+    try {
+      // Prepara gli updates per la weight (array)
+      const updates = exercisesList.map((ex) => ({
+        id: ex.id,
+        weight: [Number(weights[ex.id]) || 0],
+      }));
+      await exerciseServices.updateExercises(updates);
+      await workoutDayServices.decrementDayCount(selectedDayId);
+      if (workoutInfo?.id) {
+        await workoutServices.decrementCompletedCount(workoutInfo.id);
+      }
+      sendToast("success", "Workout completato!");
+      setIsRunning(false);
+      navigate("/");
+      // Eventuale reset stato o redirect
+    } catch (err) {
+      sendToast("error", "Errore nel salvataggio del workout");
+    }
+  };
+
   return (
     <React.Fragment>
-      <div className="absolute top-5 w-full flex justify-center left-0">
-        <PrimaryButton
-          classNames="text-white w-60"
-          text="Completa Workout"
-          onClickHandler={() => setIsModalOpen(true)}
-        />
-      </div>
-
       <div className="max-w-7xl mx-auto flex items-center gap-10 justify-center">
         <div className="text-3xl font-mono text-white">{formatTime(time)}</div>
         <PlainButton
@@ -152,7 +181,11 @@ function StartWorkout() {
               {exercisesList.map((exercise) => (
                 <div
                   key={exercise.id}
-                  className="flex gap-2 items-center justify-between bg-gray-800 border border-gray-600 p-4 rounded-lg shadow-lg"
+                  className={`flex gap-2 items-center justify-between bg-gray-800 border border-gray-600 p-4 rounded-lg shadow-lg ${
+                    completedExercises.includes(exercise.id)
+                      ? "opacity-50"
+                      : ""
+                  }`}
                 >
                   <div className="text-white">•</div>
                   <div className="flex-1 grid grid-cols-6 gap-4 items-center text-white">
@@ -173,12 +206,13 @@ function StartWorkout() {
                     </div>
                     <div>
                       <button
-                        onClick={() => handleExerciseComplete(exercise.id)}
+                        onClick={() => isRunning && handleExerciseComplete(exercise.id)}
+                        disabled={!isRunning}
                         className={`w-6 h-6 rounded-full border-2 ${
                           completedExercises.includes(exercise.id)
                             ? "bg-orange-500 border-orange-500"
                             : "border-gray-400"
-                        }`}
+                        } ${!isRunning ? "opacity-50 cursor-not-allowed" : ""}`}
                       />
                     </div>
                   </div>
@@ -187,6 +221,13 @@ function StartWorkout() {
             </div>
           </div>
         )}
+      </div>
+      <div className="w-full flex justify-center mt-8">
+        <PrimaryButton
+          classNames="text-white w-60"
+          text="Completa Workout"
+          onClickHandler={handleCompleteWorkout}
+        />
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <WorkoutDaysList

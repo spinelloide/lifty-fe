@@ -13,14 +13,25 @@ function WorkoutDaysList({ workoutDays, handleChooseDay }: Props) {
         Scegli quale giorno allenare
       </h3>
       <div className="min-w-md flex flex-col gap-2">
-        {workoutDays.map((day, idx) => (
-          <div key={day.id} onClick={() => handleChooseDay(day.id)}>
-            <PrimaryButton
-              text={day.label ? day.label : `Day ${idx + 1}`}
-              classNames="w-full"
-            />
-          </div>
-        ))}{" "}
+        {workoutDays
+          .sort((a, b) => a.id - b.id)
+          .map((day, idx) => (
+            <div key={day.id} onClick={() => handleChooseDay(day.id)}>
+              <PrimaryButton
+                classNames="w-full flex flex-col items-center py-3"
+                text={
+                  <span>
+                    <span className="block">
+                      {day.label ? day.label : `Day ${idx + 1}`}
+                    </span>
+                    <span className="text-xs text-orange-100 font-semibold mt-1">
+                      {day.count} allenamenti rimanenti
+                    </span>
+                  </span>
+                }
+              />
+            </div>
+          ))}{" "}
       </div>
     </>
   );

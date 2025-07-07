@@ -54,6 +54,19 @@ class ExerciseServices {
       throw error;
     }
   };
+
+  updateExercises = async (updates: { id: number; weight: number[] }[]) => {
+    try {
+      const response = await axios.put(
+        `${environment.apiUrl}/exercise/bulk-update`,
+        { updates }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating exercises:", error);
+      throw error;
+    }
+  };
 }
 const exerciseServices = new ExerciseServices();
 

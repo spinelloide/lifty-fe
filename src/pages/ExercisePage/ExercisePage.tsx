@@ -16,6 +16,9 @@ import { IoMdTime } from "react-icons/io";
 import { IoIosFitness } from "react-icons/io";
 import workoutDayServices from "../../services/WorkoutDayServices";
 import { WorkoutDay } from "../../types/WorkoutDay";
+import { MdEdit } from "react-icons/md";
+import { sendToast } from "../../utils/toastUtils";
+import EditDayLabel from "../../components/EditDayLabel";
 
 const ExercisePage = () => {
   const { id } = useParams();
@@ -28,6 +31,11 @@ const ExercisePage = () => {
   const [workoutInfo, setWorkoutInfo] = useState<Workout | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editLabel, setEditLabel] = useState("");
+  const [editDay, setEditDay] = useState<WorkoutDay | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+
   const fetchWorkoutDetail = async () => {
     try {
       if (id) {
@@ -118,6 +126,25 @@ const ExercisePage = () => {
     }
   };
 
+  const handleEditDayLabelSubmit = async (newLabel: string) => {
+    if (!editDay) return;
+    setEditLoading(true);
+    try {
+      await workoutDayServices.updateDayLabel(editDay.id, newLabel);
+      setWorkoutDays((prev) =>
+        prev.map((day) =>
+          day.id === editDay.id ? { ...day, label: newLabel } : day
+        )
+      );
+      sendToast("success", "Label aggiornata!");
+      setIsEditModalOpen(false);
+    } catch (err) {
+      sendToast("error", "Errore nell'aggiornamento della label");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto px-8">
@@ -138,19 +165,34 @@ const ExercisePage = () => {
           </div>
         </div>
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {workoutDays.map((day, idx) => (
-            <button
-              key={day.id}
-              onClick={() => setSelectedDay(day.id)}
-              className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
-                selectedDay === day.id
-                  ? "bg-white/20 text-white"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {day.label ? day.label : `Day ${idx + 1}`}
-            </button>
-          ))}
+          {[...workoutDays]
+            .sort((a, b) => a.id - b.id)
+            .map((day, idx) => (
+              <button
+                key={day.id}
+                onClick={() => setSelectedDay(day.id)}
+                className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
+                  selectedDay === day.id
+                    ? "bg-white/20 text-white"
+                    : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  {day.label ? day.label : `Day ${idx + 1}`}
+                  {selectedDay === day.id && (
+                    <MdEdit
+                      className="ml-2 cursor-pointer hover:text-orange-400 transition-all duration-300"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditDay(day);
+                        setEditLabel(day.label || "");
+                        setIsEditModalOpen(true);
+                      }}
+                    />
+                  )}
+                </span>
+              </button>
+            ))}
         </div>
 
         {Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
@@ -194,6 +236,20 @@ const ExercisePage = () => {
             workoutPlanId={parseInt(id!)}
             selectedDay={selectedDay}
           />
+        </Modal>
+
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        >
+          {editDay && (
+            <EditDayLabel
+              initialLabel={editDay.label || ""}
+              loading={editLoading}
+              onClose={() => setIsEditModalOpen(false)}
+              onSubmit={handleEditDayLabelSubmit}
+            />
+          )}
         </Modal>
       </div>
     </div>

@@ -33,6 +33,7 @@ const AddExercise = ({
       reps: 1,
       rest_time: 30,
       day: selectedDay,
+      weight: 0,
     },
   ]);
 
@@ -89,6 +90,7 @@ const AddExercise = ({
         reps: 1,
         rest_time: 30,
         day: selectedDay,
+        weight: 0,
       },
     ]);
   };

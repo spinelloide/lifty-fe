@@ -45,11 +45,13 @@ class WorkoutServices {
     training_days: number;
     duration: number;
     user_id: number;
+    completed_count?: number;
   }): Promise<Workout> {
     try {
+      const completed_count = workoutData.duration * workoutData.training_days;
       const response = await axios.post(
         `${environment.apiUrl}/workout/create`,
-        workoutData
+        { ...workoutData, completed_count }
       );
 
       Array.from({ length: workoutData.training_days }).forEach(() => {
@@ -89,6 +91,18 @@ class WorkoutServices {
         "Errore nell'aggiornamento dello stato dell'allenamento:",
         error
       );
+      throw error;
+    }
+  }
+
+  async decrementCompletedCount(workoutId: number) {
+    try {
+      const response = await axios.put(
+        `${environment.apiUrl}/workout/${workoutId}/decrement-completed`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nel decremento del completed_count:", error);
       throw error;
     }
   }

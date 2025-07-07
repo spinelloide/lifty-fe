@@ -1,5 +1,5 @@
 type Props = {
-  text: string;
+  text: string | React.ReactNode;
   onClickHandler?: () => void;
   classNames?: string;
 };

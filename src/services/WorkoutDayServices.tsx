@@ -36,6 +36,31 @@ class WorkoutDayServices {
       throw error;
     }
   }
+
+  async updateDayLabel(dayId: number, label: string) {
+    try {
+      const response = await axios.put(
+        `${environment.apiUrl}/workout_day/${dayId}`,
+        { label }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nell'aggiornamento della label:", error);
+      throw error;
+    }
+  }
+
+  async decrementDayCount(dayId: number) {
+    try {
+      const response = await axios.put(
+        `${environment.apiUrl}/workout_day/${dayId}/decrement`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nel decremento del count:", error);
+      throw error;
+    }
+  }
 }
 
 const workoutDayServices = new WorkoutDayServices();

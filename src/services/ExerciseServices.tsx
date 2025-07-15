@@ -67,6 +67,18 @@ class ExerciseServices {
       throw error;
     }
   };
+
+  async deleteExercise(workoutId: number) {
+    try {
+      const response = await axios.delete(
+        `${environment.apiUrl}/exercise/delete/${workoutId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Errore nella cancellazione dell'allenamento:", error);
+      throw error;
+    }
+  }
 }
 const exerciseServices = new ExerciseServices();
 

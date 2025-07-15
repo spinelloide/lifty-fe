@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Exercise } from "../../types/Exercise";
 import { toast } from "react-toastify";
 
+import { FiTrash2 } from "react-icons/fi";
+
 import Modal from "../../ui/Modal";
 import Loader from "../../components/Loader";
 import exerciseServices from "../../services/ExerciseServices";
@@ -19,6 +21,8 @@ import { WorkoutDay } from "../../types/WorkoutDay";
 import { MdEdit } from "react-icons/md";
 import { sendToast } from "../../utils/toastUtils";
 import EditDayLabel from "../../components/EditDayLabel";
+import IconButton from "../../ui/IconButton";
+import ConfirmDeleteExerciseModal from "../../components/ConfirmDeleteExerciseModal";
 
 const ExercisePage = () => {
   const { id } = useParams();
@@ -32,9 +36,12 @@ const ExercisePage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editLabel, setEditLabel] = useState("");
+  const [, setEditLabel] = useState("");
   const [editDay, setEditDay] = useState<WorkoutDay | null>(null);
   const [editLoading, setEditLoading] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
 
   const fetchWorkoutDetail = async () => {
     try {
@@ -70,7 +77,9 @@ const ExercisePage = () => {
           parseInt(id)
         );
 
-        setSelectedDay(data[0].id);
+        const sortedData = data.sort((a, b) => a.id - b.id);
+
+        setSelectedDay(sortedData[0].id);
         setWorkoutDays(data);
       }
     } catch (err) {
@@ -111,6 +120,7 @@ const ExercisePage = () => {
       groups[group] = [];
     }
     groups[group].push(exercise);
+
     return groups;
   }, {} as Record<string, Exercise[]>);
 
@@ -138,10 +148,31 @@ const ExercisePage = () => {
       );
       sendToast("success", "Label aggiornata!");
       setIsEditModalOpen(false);
-    } catch (err) {
+    } catch {
       sendToast("error", "Errore nell'aggiornamento della label");
     } finally {
       setEditLoading(false);
+    }
+  };
+
+  const onDeleteExercise = (exerciseId: number) => {
+    setExerciseToDelete(exerciseId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (exerciseToDelete) {
+      try {
+        await exerciseServices.deleteExercise(exerciseToDelete);
+        await fetchExercises();
+        sendToast("success", "Esercizio eliminato con successo!");
+      } catch (error) {
+        console.error("Errore durante l'eliminazione del workout:", error);
+        sendToast("error", "Errore durante l'eliminazione del workout");
+      } finally {
+        setIsDeleteModalOpen(false);
+        setExerciseToDelete(null);
+      }
     }
   };
 
@@ -165,34 +196,32 @@ const ExercisePage = () => {
           </div>
         </div>
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {[...workoutDays]
-            .sort((a, b) => a.id - b.id)
-            .map((day, idx) => (
-              <button
-                key={day.id}
-                onClick={() => setSelectedDay(day.id)}
-                className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
-                  selectedDay === day.id
-                    ? "bg-white/20 text-white"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  {day.label ? day.label : `Day ${idx + 1}`}
-                  {selectedDay === day.id && (
-                    <MdEdit
-                      className="ml-2 cursor-pointer hover:text-orange-400 transition-all duration-300"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditDay(day);
-                        setEditLabel(day.label || "");
-                        setIsEditModalOpen(true);
-                      }}
-                    />
-                  )}
-                </span>
-              </button>
-            ))}
+          {[...workoutDays].map((day, idx) => (
+            <button
+              key={day.id}
+              onClick={() => setSelectedDay(day.id)}
+              className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
+                selectedDay === day.id
+                  ? "bg-white/20 text-white"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                {day.label ? day.label : `Day ${idx + 1}`}
+                {selectedDay === day.id && (
+                  <MdEdit
+                    className="ml-2 cursor-pointer hover:text-orange-400 transition-all duration-300"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditDay(day);
+                      setEditLabel(day.label || "");
+                      setIsEditModalOpen(true);
+                    }}
+                  />
+                )}
+              </span>
+            </button>
+          ))}
         </div>
 
         {Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
@@ -206,9 +235,15 @@ const ExercisePage = () => {
                   key={exercise.id}
                   className="bg-white/10 backdrop-blur-lg rounded-lg p-6 text-white"
                 >
-                  <h3 className="text-xl font-semibold mb-2">
-                    {exercise.name}
-                  </h3>
+                  <div className="flex items-center w-full justify-between">
+                    <h3 className="text-xl font-semibold mb-2">
+                      {exercise.name}
+                    </h3>
+                    <IconButton
+                      icon={FiTrash2}
+                      onClick={() => onDeleteExercise(exercise.id!)}
+                    />
+                  </div>
                   <div className="flex justify-between text-sm mt-4 pt-4 border-t border-gray-700">
                     <div className="flex items-center gap-2">
                       <IoIosFitness className="text-orange-400 w-4 h-4" />
@@ -251,6 +286,14 @@ const ExercisePage = () => {
             />
           )}
         </Modal>
+        <ConfirmDeleteExerciseModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setExerciseToDelete(null);
+          }}
+          onConfirm={confirmDelete}
+        />
       </div>
     </div>
   );

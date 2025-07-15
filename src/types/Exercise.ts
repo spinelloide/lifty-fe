@@ -6,7 +6,7 @@ export interface Exercise {
   sets: number;
   reps: number;
   rest_time: number;
-  weight: number;
+  weight: number[];
   day: number;
   created_at?: string;
   updated_at?: string;

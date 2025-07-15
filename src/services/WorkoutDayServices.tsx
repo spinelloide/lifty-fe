@@ -1,5 +1,6 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
+import { WorkoutDay } from "../types/WorkoutDay";
 
 class WorkoutDayServices {
   async addWorkoutDay(workoutData: { workout_plan_id: number; count: number }) {
@@ -21,12 +22,13 @@ class WorkoutDayServices {
     }
   }
 
-  async listDaysByWorkoutPlanId(workoutPlanId: number) {
+  async listDaysByWorkoutPlanId(workoutPlanId: number): Promise<WorkoutDay[]> {
     // workout_day/list/20
     try {
       const response = await axios.get(
         `${environment.apiUrl}/workout_day/list/${workoutPlanId}`
       );
+
       return response.data;
     } catch (error) {
       console.error(

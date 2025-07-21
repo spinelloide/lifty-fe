@@ -31,7 +31,7 @@ const WorkoutCard = ({ workout, onDelete, onNavigate }: WorkoutCardProps) => {
           <p className="text-gray-300 text-sm flex-grow group-hover:text-gray-200 transition-colors duration-200">
             {workout.description || "No description available"}
           </p>
-          {typeof workout.completed_count === 'number' && (
+          {typeof workout.completed_count === "number" && (
             <p className="text-orange-400 text-sm font-semibold mt-2">
               {workout.completed_count} allenamenti alla fine del workout
             </p>

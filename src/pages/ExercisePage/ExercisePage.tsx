@@ -22,7 +22,7 @@ import { MdEdit } from "react-icons/md";
 import { sendToast } from "../../utils/toastUtils";
 import EditDayLabel from "../../components/EditDayLabel";
 import IconButton from "../../ui/IconButton";
-import ConfirmDeleteExerciseModal from "../../components/ConfirmDeleteExerciseModal";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 
 const ExercisePage = () => {
   const { id } = useParams();
@@ -286,13 +286,14 @@ const ExercisePage = () => {
             />
           )}
         </Modal>
-        <ConfirmDeleteExerciseModal
+        <ConfirmDeleteModal
           isOpen={isDeleteModalOpen}
           onClose={() => {
             setIsDeleteModalOpen(false);
             setExerciseToDelete(null);
           }}
           onConfirm={confirmDelete}
+          message="Sei sicuro di voler eliminare questo esercizio?"
         />
       </div>
     </div>

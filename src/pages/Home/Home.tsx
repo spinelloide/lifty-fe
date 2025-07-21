@@ -7,13 +7,12 @@ import PrimaryButton from "../../ui/PrimaryButton";
 import { Workout } from "../../types/Workout";
 import WorkoutCard from "../../components/WorkoutCard";
 
-import ConfirmDeleteWorkoutModal from "../../components/ConfirmDeleteWorkoutModal.tsx";
-
 import workoutServices from "../../services/WorkoutServices";
 import { routes } from "../../utils/routes";
 import { sendToast } from "../../utils/toastUtils";
 import authServices from "../../services/AuthServices";
 import Page from "../../components/Page";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal.tsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -103,13 +102,14 @@ const Home = () => {
         )}
       </div>
 
-      <ConfirmDeleteWorkoutModal
+      <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
           setIsDeleteModalOpen(false);
           setWorkoutToDelete(null);
         }}
         onConfirm={confirmDelete}
+        message="Sei sicuro di voler eliminare questo workout?"
       />
     </Page>
   );

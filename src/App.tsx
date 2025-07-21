@@ -13,8 +13,12 @@ import PrivateRoute from "./components/PrivateRoute";
 import StartWorkout from "./pages/StartWorkout/StartWorkout";
 import Layout from "./components/Layout";
 import React from "react";
+import authServices from "./services/AuthServices";
+import ChatToTrainer from "./components/ChatToTrainer";
 
 function App() {
+  const authData = authServices.getLoginData();
+
   return (
     <React.Fragment>
       <Router>
@@ -52,6 +56,11 @@ function App() {
               element={<PrivateRoute element={<StartWorkout />} />}
             />
           </Routes>
+          {authData?.token && (
+            <div className="absolute bottom-4 right-4">
+              <ChatToTrainer />
+            </div>
+          )}
         </Layout>
       </Router>
     </React.Fragment>

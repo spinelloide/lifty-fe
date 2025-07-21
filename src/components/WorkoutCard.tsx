@@ -14,7 +14,7 @@ const WorkoutCard = ({ workout, onDelete, onNavigate }: WorkoutCardProps) => {
     <Card
       key={workout.id}
       width="18"
-      height="13"
+      height="18"
       className="group cursor-pointer"
     >
       <div className="flex flex-col h-full relative">
@@ -22,13 +22,17 @@ const WorkoutCard = ({ workout, onDelete, onNavigate }: WorkoutCardProps) => {
           onClick={() => onNavigate(workout.id)}
           className="flex flex-col h-full"
         >
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-xl font-semibold text-white group-hover:text-orange-400 transition-colors duration-200">
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="text-xl font-semibold text-white group-hover:text-orange-400 transition-colors duration-200 ">
               {workout.title}
             </h3>
-            <IconButton icon={FiTrash2} onClick={() => onDelete(workout.id)} />
+            <IconButton
+              className="mt-1"
+              icon={FiTrash2}
+              onClick={() => onDelete(workout.id)}
+            />
           </div>
-          <p className="text-gray-300 text-sm flex-grow group-hover:text-gray-200 transition-colors duration-200">
+          <p className="text-gray-300 text-sm flex-grow group-hover:text-gray-200 transition-colors duration-200 line-clamp-3">
             {workout.description || "No description available"}
           </p>
           {typeof workout.completed_count === "number" && (

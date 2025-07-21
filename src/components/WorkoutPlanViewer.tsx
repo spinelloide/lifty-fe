@@ -2,6 +2,9 @@ import React from "react";
 import { Exercise } from "../types/Exercise";
 
 import { GeneratedWorkoutPlan } from "../types/GeneratedWorkoutPlan";
+import workoutServices from "../services/WorkoutServices";
+import authServices from "../services/AuthServices";
+import exerciseServices from "../services/ExerciseServices";
 
 const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
   workout_plan,
@@ -16,7 +19,33 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
     {}
   );
 
-  console.log("workout_plan", workout_plan);
+  const handleSubmitWorkoutPlan = async () => {
+    // Logic to handle workout plan submission
+    console.log("Workout plan submitted:", workout_plan);
+    try {
+      const response = await workoutServices.createWorkout({
+        title: workout_plan.title,
+        description: workout_plan.description,
+        training_days: workout_plan.training_days,
+        duration: workout_plan.duration,
+        user_id: authServices.getLoginData()?.user.id ?? 0,
+      });
+
+   
+
+      await Promise.all(
+        exercises.map((exercise) =>
+          exerciseServices.createExercise({
+            ...exercise,
+            workout_plan_id: response.id, // <-- usa l'id appena ottenuto
+          })
+        )
+      );
+    } catch (error) {
+      console.error("Error submitting workout plan:", error);
+      // Handle error appropriately, e.g., show a notification
+    }
+  };
 
   return (
     <>
@@ -74,7 +103,12 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
         </div>
       </div>
       <div className="flex justify-end mt-2">
-        <button className="bg-orange-500 text-white px-4 py-2 rounded">
+        <button
+          className="bg-green-700 text-white px-4 py-2 rounded"
+          onClick={() => {
+            handleSubmitWorkoutPlan();
+          }}
+        >
           Salva Allenamento
         </button>
       </div>

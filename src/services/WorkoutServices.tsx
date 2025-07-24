@@ -57,7 +57,7 @@ class WorkoutServices {
       Array.from({ length: workoutData.training_days }).forEach(() => {
         workoutDayServices.addWorkoutDay({
           workout_plan_id: response.data.id,
-          count: 8,
+          count: workoutData.duration,
         });
       });
       return response.data;

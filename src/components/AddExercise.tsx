@@ -121,8 +121,8 @@ const AddExercise = ({
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="max-h-[60vh] overflow-y-scroll flex flex-col gap-2">
+    <div className="space-y-6 ">
+      <div className="max-h-[60vh] overflow-y-auto flex flex-col gap-2 custom-scrollbar px-4">
         {exercises.map((exercise, index) => (
           <div
             key={index}

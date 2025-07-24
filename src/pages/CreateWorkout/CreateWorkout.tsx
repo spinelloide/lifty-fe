@@ -48,6 +48,7 @@ const CreateWorkout = () => {
         description: values.description,
         training_days: Number(values.days),
         duration: Number(values.duration),
+
         user_id: authServices.getLoginData()?.user.id ?? 0,
       });
 

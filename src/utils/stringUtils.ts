@@ -12,6 +12,34 @@ export function getMuscleGroupTitle(muscleGroup: string): string {
       return "BICEPS";
     case "6":
       return "SHOULDERS";
+    case "7":
+      return "CORE";
+    case "8":
+      return "FULL BODY";
+    case "9":
+      return "CARDIO";
+    default:
+      return "";
+  }
+}
+export function getIdFromMuscleGroup(muscleGroup: string): string {
+  switch (muscleGroup) {
+    case "CHEST":
+      return "1";
+    case "BACK":
+      return "2";
+    case "TRICEPS":
+      return "3";
+    case "LEGS":
+      return "4";
+    case "BICEPS":
+      return "5";
+    case "SHOULDERS":
+      return "6";
+    case "CORE":
+      return "7";
+    case "FULL BODY":
+      return "8";
     default:
       return "";
   }

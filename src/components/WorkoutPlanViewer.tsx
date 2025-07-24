@@ -5,6 +5,9 @@ import { GeneratedWorkoutPlan } from "../types/GeneratedWorkoutPlan";
 import workoutServices from "../services/WorkoutServices";
 import authServices from "../services/AuthServices";
 import exerciseServices from "../services/ExerciseServices";
+import workoutDayServices from "../services/WorkoutDayServices";
+
+import { getIdFromMuscleGroup } from "../utils/stringUtils";
 
 const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
   workout_plan,
@@ -20,10 +23,9 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
   );
 
   const handleSubmitWorkoutPlan = async () => {
-    // Logic to handle workout plan submission
-    console.log("Workout plan submitted:", workout_plan);
     try {
-      const response = await workoutServices.createWorkout({
+      // 1️⃣ Crea il workout plan
+      const workout = await workoutServices.createWorkout({
         title: workout_plan.title,
         description: workout_plan.description,
         training_days: workout_plan.training_days,
@@ -31,19 +33,54 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
         user_id: authServices.getLoginData()?.user.id ?? 0,
       });
 
-   
-
-      await Promise.all(
-        exercises.map((exercise) =>
-          exerciseServices.createExercise({
-            ...exercise,
-            workout_plan_id: response.id, // <-- usa l'id appena ottenuto
-          })
-        )
+      // 2️⃣ Recupera i workout_day associati al piano creato
+      const workoutDays = await workoutDayServices.listDaysByWorkoutPlanId(
+        workout.id
       );
+
+      // 3️⃣ Ordina i workout_day per ID crescente
+      const sortedDays = workoutDays.sort((a, b) => a.id - b.id);
+
+      console.log("sortedDays", sortedDays);
+
+      // 4️⃣ Raggruppa gli esercizi per day (1-based)
+      const exercisesByDay = exercises.reduce<Record<number, Exercise[]>>(
+        (acc, ex) => {
+          acc[ex.day] = acc[ex.day] || [];
+          acc[ex.day].push(ex);
+          return acc;
+        },
+        {}
+      );
+
+      console.log("exercisesByDay", exercisesByDay);
+
+      // 5️⃣ Crea tutti gli esercizi associandoli al giusto workout_day.id
+      const allExerciseCreations = Object.entries(exercisesByDay).flatMap(
+        ([dayStr, dayExercises]) => {
+          const dayIndex = parseInt(dayStr, 10) - 1;
+          const workout_day = sortedDays[dayIndex];
+
+          return dayExercises.map((exercise) =>
+            exerciseServices.createExercise({
+              ...exercise,
+              workout_plan_id: workout.id,
+              muscle_group: getIdFromMuscleGroup(exercise.muscle_group),
+              day: workout_day.id, // ✅ ID reale del workout_day
+            })
+          );
+        }
+      );
+
+      console.log("allExerciseCreations", allExerciseCreations);
+
+      await Promise.all(allExerciseCreations);
+
+      console.log("Workout plan and exercises saved successfully.");
+      // Opzionale: toast di successo
     } catch (error) {
       console.error("Error submitting workout plan:", error);
-      // Handle error appropriately, e.g., show a notification
+      // Gestione errore
     }
   };
 

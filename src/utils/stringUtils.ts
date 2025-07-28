@@ -19,7 +19,7 @@ export function getMuscleGroupTitle(muscleGroup: string): string {
     case "9":
       return "CARDIO";
     default:
-      return "";
+      return muscleGroup;
   }
 }
 export function getIdFromMuscleGroup(muscleGroup: string): string {

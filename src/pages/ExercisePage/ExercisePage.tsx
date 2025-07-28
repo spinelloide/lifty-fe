@@ -43,6 +43,8 @@ const ExercisePage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
 
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+
   const fetchWorkoutDetail = async () => {
     try {
       if (id) {
@@ -161,6 +163,7 @@ const ExercisePage = () => {
   };
 
   const confirmDelete = async () => {
+    setLoadingSubmit(true);
     if (exerciseToDelete) {
       try {
         await exerciseServices.deleteExercise(exerciseToDelete);
@@ -172,6 +175,7 @@ const ExercisePage = () => {
       } finally {
         setIsDeleteModalOpen(false);
         setExerciseToDelete(null);
+        setLoadingSubmit(false);
       }
     }
   };
@@ -233,10 +237,10 @@ const ExercisePage = () => {
               {exercises.map((exercise) => (
                 <div
                   key={exercise.id}
-                  className="bg-white/10 backdrop-blur-lg rounded-lg p-6 text-white"
+                  className="bg-white/10 backdrop-blur-lg rounded-lg p-4 text-white relative"
                 >
-                  <div className="flex items-center w-full justify-between">
-                    <h3 className="text-xl font-semibold mb-2">
+                  <div className="flex items-center w-full justify-between mb-4">
+                    <h3 className="text-xl font-semibold">
                       {exercise.name}
                     </h3>
                     <IconButton
@@ -287,6 +291,7 @@ const ExercisePage = () => {
           )}
         </Modal>
         <ConfirmDeleteModal
+          isLoading={loadingSubmit}
           isOpen={isDeleteModalOpen}
           onClose={() => {
             setIsDeleteModalOpen(false);

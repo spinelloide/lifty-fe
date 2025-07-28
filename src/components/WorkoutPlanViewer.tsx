@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Exercise } from "../types/Exercise";
 
 import { GeneratedWorkoutPlan } from "../types/GeneratedWorkoutPlan";
@@ -9,10 +9,16 @@ import workoutDayServices from "../services/WorkoutDayServices";
 
 import { getIdFromMuscleGroup } from "../utils/stringUtils";
 
+import { sendToast } from "../utils/toastUtils";
+import { FiLoader } from "react-icons/fi";
+
 const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
   workout_plan,
   exercises,
 }) => {
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [workoutSaved, setWorkoutSaved] = useState(false);
+
   const groupedByDay = exercises.reduce<Record<number, Exercise[]>>(
     (acc, ex) => {
       acc[ex.day] = acc[ex.day] || [];
@@ -23,6 +29,7 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
   );
 
   const handleSubmitWorkoutPlan = async () => {
+    setLoadingSubmit(true);
     try {
       // 1️⃣ Crea il workout plan
       const workout = await workoutServices.createWorkout({
@@ -41,10 +48,8 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
       // 3️⃣ Ordina i workout_day per ID crescente
       const sortedDays = workoutDays.sort((a, b) => a.id - b.id);
 
-      console.log("sortedDays", sortedDays);
-
       // 4️⃣ Raggruppa gli esercizi per day (1-based)
-      const exercisesByDay = exercises.reduce<Record<number, Exercise[]>>(
+      const exercisesByDay = await exercises.reduce<Record<number, Exercise[]>>(
         (acc, ex) => {
           acc[ex.day] = acc[ex.day] || [];
           acc[ex.day].push(ex);
@@ -52,15 +57,11 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
         },
         {}
       );
-
-      console.log("exercisesByDay", exercisesByDay);
-
       // 5️⃣ Crea tutti gli esercizi associandoli al giusto workout_day.id
       const allExerciseCreations = Object.entries(exercisesByDay).flatMap(
         ([dayStr, dayExercises]) => {
           const dayIndex = parseInt(dayStr, 10) - 1;
           const workout_day = sortedDays[dayIndex];
-
           return dayExercises.map((exercise) =>
             exerciseServices.createExercise({
               ...exercise,
@@ -72,15 +73,15 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
         }
       );
 
-      console.log("allExerciseCreations", allExerciseCreations);
-
       await Promise.all(allExerciseCreations);
 
-      console.log("Workout plan and exercises saved successfully.");
-      // Opzionale: toast di successo
+      sendToast("success", "Allenamento salvato con successo!");
+      setWorkoutSaved(true);
     } catch (error) {
       console.error("Error submitting workout plan:", error);
       // Gestione errore
+    } finally {
+      setLoadingSubmit(false);
     }
   };
 
@@ -141,12 +142,19 @@ const WorkoutPlanViewer: React.FC<GeneratedWorkoutPlan> = ({
       </div>
       <div className="flex justify-end mt-2">
         <button
-          className="bg-green-700 text-white px-4 py-2 rounded"
+          className={`cursor-pointer bg-green-700 text-white px-4 py-2 rounded ${workoutSaved ? "opacity-50 bg-gray-600" : "bg-green-700"}`}
+          disabled={loadingSubmit || workoutSaved}
           onClick={() => {
             handleSubmitWorkoutPlan();
           }}
         >
-          Salva Allenamento
+          {loadingSubmit ? (
+            <FiLoader className="inline animate-spin" />
+          ) : workoutSaved ? (
+            "Allenamento salvato!"
+          ) : (
+            "Salva Allenamento"
+          )}
         </button>
       </div>
     </>

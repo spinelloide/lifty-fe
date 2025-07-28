@@ -20,6 +20,8 @@ const Home = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [workoutToDelete, setWorkoutToDelete] = useState<number | null>(null);
 
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+
   const user = authServices.getLoginData();
 
   const getWorkouts = async () => {
@@ -39,6 +41,7 @@ const Home = () => {
   };
 
   const confirmDelete = async () => {
+    setLoadingSubmit(true);
     if (workoutToDelete) {
       try {
         await workoutServices.deleteWorkout(workoutToDelete);
@@ -50,6 +53,7 @@ const Home = () => {
       } finally {
         setIsDeleteModalOpen(false);
         setWorkoutToDelete(null);
+        setLoadingSubmit(false);
       }
     }
   };
@@ -103,6 +107,8 @@ const Home = () => {
       </div>
 
       <ConfirmDeleteModal
+        isLoading={loadingSubmit}
+        title="Conferma eliminazione"
         isOpen={isDeleteModalOpen}
         onClose={() => {
           setIsDeleteModalOpen(false);

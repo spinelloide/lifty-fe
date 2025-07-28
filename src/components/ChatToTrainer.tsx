@@ -206,8 +206,8 @@ const ChatToTrainer = () => {
             </div>
           )}
           {isCompleted && index === 3 && (
-            <div className="text-green-500 mt-2">
-              <button onClick={() => setShowWorkoutViewer(true)}>
+            <div className=" mt-2 cursor-pointer bg-green-600 text-white px-3 py-1 flex justify-center items-center">
+              <button className="cursor-pointer hover:opacity-80" onClick={() => setShowWorkoutViewer(true)}>
                 Visualizza allenamento generato
               </button>
             </div>

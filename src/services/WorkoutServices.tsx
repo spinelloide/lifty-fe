@@ -1,7 +1,6 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
 import { Workout } from "../types/Workout";
-import workoutDayServices from "./WorkoutDayServices";
 
 class WorkoutServices {
   async getList(userId: number): Promise<Workout[]> {
@@ -54,12 +53,12 @@ class WorkoutServices {
         { ...workoutData, completed_count }
       );
 
-      Array.from({ length: workoutData.training_days }).forEach(() => {
-        workoutDayServices.addWorkoutDay({
-          workout_plan_id: response.data.id,
-          count: workoutData.duration,
-        });
-      });
+      // Array.from({ length: workoutData.training_days }).forEach(() => {
+      //   workoutDayServices.addWorkoutDay({
+      //     workout_plan_id: response.data.id,
+      //     count: workoutData.duration,
+      //   });
+      // });
       return response.data;
     } catch (error) {
       console.error("Errore nella creazione dell'allenamento:", error);

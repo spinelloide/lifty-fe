@@ -1,9 +1,11 @@
 import Modal from "../ui/Modal";
+import { FiLoader } from "react-icons/fi";
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
   title?: string;
   message?: string;
   confirmLabel?: string;
@@ -14,6 +16,7 @@ const ConfirmDeleteModal = ({
   isOpen,
   onClose,
   onConfirm,
+  isLoading = false,
   title = "Conferma eliminazione",
   message = "Sei sicuro di voler procedere?",
   confirmLabel = "Elimina",
@@ -26,15 +29,22 @@ const ConfirmDeleteModal = ({
       <div className="flex justify-center gap-4">
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200"
+          className="cursor-pointer px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200"
         >
           {cancelLabel}
         </button>
         <button
+          disabled={isLoading}
           onClick={onConfirm}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+          className={
+            "cursor-pointer px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center "
+          }
         >
-          {confirmLabel}
+          {isLoading ? (
+            <FiLoader className="inline animate-spin" />
+          ) : (
+            confirmLabel
+          )}
         </button>
       </div>
     </div>

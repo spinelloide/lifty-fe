@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">lifty</string>
+    <string name="title_activity_main">lifty</string>
+    <string name="package_name">com.lify.app</string>
+    <string name="custom_url_scheme">com.lify.app</string>
+</resources>

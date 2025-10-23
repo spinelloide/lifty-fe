@@ -65,9 +65,9 @@ const CreateWorkout = () => {
 
   return (
     <Page>
-      <div className="p-8 flex flex-col items-center h-full justify-center">
+      <div className=" p-2lg:p-8 flex flex-col items-center h-full justify-center">
         <div className="max-w-md w-full bg-gray-800/50 p-6 rounded-lg shadow-xl">
-          <h1 className="text-3xl font-bold mb-6 text-white text-center">
+          <h1 className="lg:text-3xl text-xl font-bold mb-6 text-white text-center">
             Create New Workout
           </h1>
           <Form

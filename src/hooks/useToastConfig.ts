@@ -25,7 +25,7 @@ export const useToastConfig = () => {
   return {
     position: (isMobile ? 'bottom-center' : 'top-right') as ToastPosition,
     className: isMobile ? 'toast-mobile' : 'toast-desktop',
-    autoClose: 3000, // Assicuriamo che sia sempre 3000ms
+    autoClose: 100000000, // Assicuriamo che sia sempre 3000ms
     style: isMobile ? {
       bottom: '20px',
       left: '50%',

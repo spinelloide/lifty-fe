@@ -180,7 +180,7 @@ const AddExercise = ({
               </select>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Sets
@@ -249,7 +249,7 @@ const AddExercise = ({
         ))}{" "}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 px-4 lg:px-0 justify-between">
         <button
           onClick={addMoreExercise}
           className="px-6 py-2 border-2 bg-transparent border-primary rounded-lg backdrop-blur-lg text-primary hover:bg-white/20 transition-all"

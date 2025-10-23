@@ -95,7 +95,7 @@ const Home = () => {
                 onDelete={handleDeleteWorkout}
                 onNavigate={(id) => navigate(`/add-exercises/${id}`)}
               />
-              <div className="bg-orange-400 w-[18rem] relative z-9 pt-3 pb-2 px-2 flex justify-center rounded-b-xl ">
+              <div className="bg-orange-400 w-[20rem] lg:w-[18rem] relative z-9 pt-3 pb-2 px-2 flex justify-center rounded-b-xl ">
                 <div
                   className="text-white font-bold cursor-pointer hover:opacity-60 transition-all duration-300 duration-300"
                   onClick={() =>

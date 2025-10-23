@@ -15,7 +15,7 @@ const WorkoutCard = ({ workout, onDelete, onNavigate }: WorkoutCardProps) => {
   return (
     <Card
       key={workout.id}
-      width="18"
+      width={isMobile ? "20" : "18"}
       height={isMobile ? "10" : "18"}
       className="group cursor-pointer"
     >

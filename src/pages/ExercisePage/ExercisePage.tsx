@@ -250,7 +250,7 @@ const ExercisePage = () => {
           className="h-full"
           style={{
             overflowY: isMobile ? "scroll" : "auto",
-            maxHeight: isMobile ? "50vh" : "80vh",
+            maxHeight: isMobile ? "50vh" : "60vh",
           }}
         >
           {Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (

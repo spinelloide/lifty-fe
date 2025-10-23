@@ -58,11 +58,11 @@ const Form = ({
             </div>
           ))}{" "}
         </div>
-        <div className="mt-4">
+        <div className="mt-6">
           <button
             type="submit"
             disabled={isLoading}
-            className="cursor-pointer text-white font-semibold px-4 py-2 bg-orange-400 hover:bg-orange-500 transition-all duration-200 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer w-full text-white font-semibold px-4 py-2 bg-orange-400 hover:bg-orange-500 transition-all duration-200 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitText}
           </button>

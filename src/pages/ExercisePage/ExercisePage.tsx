@@ -18,11 +18,13 @@ import { IoMdTime } from "react-icons/io";
 import { IoIosFitness } from "react-icons/io";
 import workoutDayServices from "../../services/WorkoutDayServices";
 import { WorkoutDay } from "../../types/WorkoutDay";
-import { MdEdit } from "react-icons/md";
 import { sendToast } from "../../utils/toastUtils";
 import EditDayLabel from "../../components/EditDayLabel";
 import IconButton from "../../ui/IconButton";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
+import { useIsMobile } from "../../hooks/useIsMobile";
+import BottomSheet from "../../ui/BottomSheet";
+import WorkoutDaySelector from "../../components/WorkoutDaySelector";
 
 const ExercisePage = () => {
   const { id } = useParams();
@@ -44,6 +46,10 @@ const ExercisePage = () => {
   const [exerciseToDelete, setExerciseToDelete] = useState<number | null>(null);
 
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+
+  // Mobile and bottom sheet states
+  const isMobile = useIsMobile();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const fetchWorkoutDetail = async () => {
     try {
@@ -157,6 +163,19 @@ const ExercisePage = () => {
     }
   };
 
+  const handleSelectDay = (dayId: number) => {
+    setSelectedDay(dayId);
+  };
+
+  const handleEditDay = (day: WorkoutDay) => {
+    setEditDay(day);
+    setEditLabel(day.label || "");
+    setIsEditModalOpen(true);
+    if (isMobile) {
+      setIsBottomSheetOpen(false);
+    }
+  };
+
   const onDeleteExercise = (exerciseId: number) => {
     setExerciseToDelete(exerciseId);
     setIsDeleteModalOpen(true);
@@ -181,11 +200,11 @@ const ExercisePage = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="lg:p-8 p-2">
       <div className="max-w-7xl mx-auto px-8">
-        <div className="flex justify-between w-full">
+        <div className="flex lg:flex-row flex-col justify-between w-full">
           <div className="flex items-center gap-4 mb-8">
-            <h1 className="text-4xl font-bold text-white tracking-tight">
+            <h1 className="lg:text-4xl text-2xl font-bold text-white tracking-tight">
               {workoutInfo?.title}
             </h1>
           </div>{" "}
@@ -199,74 +218,79 @@ const ExercisePage = () => {
             </button>
           </div>
         </div>
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {[...workoutDays].map((day, idx) => (
+        {/* Workout Day Selector - Responsive */}
+        {isMobile ? (
+          <div className="mb-6">
             <button
-              key={day.id}
-              onClick={() => setSelectedDay(day.id)}
-              className={`cursor-pointer px-6 py-2 rounded-lg backdrop-blur-lg transition-all ${
-                selectedDay === day.id
-                  ? "bg-white/20 text-white"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
-              }`}
+              onClick={() => setIsBottomSheetOpen(true)}
+              className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg px-6 py-4 text-white hover:bg-white/20 transition-all duration-200 flex items-center justify-between"
             >
-              <span className="flex items-center gap-2">
-                {day.label ? day.label : `Day ${idx + 1}`}
-                {selectedDay === day.id && (
-                  <MdEdit
-                    className="ml-2 cursor-pointer hover:text-orange-400 transition-all duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditDay(day);
-                      setEditLabel(day.label || "");
-                      setIsEditModalOpen(true);
-                    }}
-                  />
-                )}
+              <span className="text-lg font-medium">
+                {workoutDays.find((day) => day.id === selectedDay)?.label ||
+                  `Day ${
+                    workoutDays.findIndex((day) => day.id === selectedDay) + 1
+                  }`}
+              </span>
+              <span className="text-orange-400 text-sm">
+                Choose workout day
               </span>
             </button>
+          </div>
+        ) : (
+          <WorkoutDaySelector
+            workoutDays={workoutDays}
+            selectedDay={selectedDay}
+            onSelectDay={handleSelectDay}
+            onEditDay={handleEditDay}
+            isMobile={false}
+          />
+        )}
+
+        <div
+          className="h-full"
+          style={{
+            overflowY: isMobile ? "scroll" : "auto",
+            maxHeight: isMobile ? "50vh" : "80vh",
+          }}
+        >
+          {Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
+            <div key={muscleGroup} className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">
+                {getMuscleGroupTitle(muscleGroup)}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full">
+                {exercises.map((exercise) => (
+                  <div
+                    key={exercise.id}
+                    className="bg-white/10 backdrop-blur-lg rounded-lg p-4 text-white relative"
+                  >
+                    <div className="flex items-center w-full justify-between mb-4">
+                      <h3 className="text-xl font-semibold">{exercise.name}</h3>
+                      <IconButton
+                        icon={FiTrash2}
+                        onClick={() => onDeleteExercise(exercise.id!)}
+                      />
+                    </div>
+                    <div className="flex justify-between text-sm mt-4 pt-4 border-t border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <IoIosFitness className="text-orange-400 w-4 h-4" />
+                        <span>{exercise.sets} sets</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MdOutlineRepeat className="text-orange-400 w-4 h-4" />
+                        <span>{exercise.reps} reps</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IoMdTime className="text-orange-400 w-4 h-4" />
+                        <span>{exercise.rest_time}s rest</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-
-        {Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
-          <div key={muscleGroup} className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              {getMuscleGroupTitle(muscleGroup)}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {exercises.map((exercise) => (
-                <div
-                  key={exercise.id}
-                  className="bg-white/10 backdrop-blur-lg rounded-lg p-4 text-white relative"
-                >
-                  <div className="flex items-center w-full justify-between mb-4">
-                    <h3 className="text-xl font-semibold">
-                      {exercise.name}
-                    </h3>
-                    <IconButton
-                      icon={FiTrash2}
-                      onClick={() => onDeleteExercise(exercise.id!)}
-                    />
-                  </div>
-                  <div className="flex justify-between text-sm mt-4 pt-4 border-t border-gray-700">
-                    <div className="flex items-center gap-2">
-                      <IoIosFitness className="text-orange-400 w-4 h-4" />
-                      <span>{exercise.sets} sets</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MdOutlineRepeat className="text-orange-400 w-4 h-4" />
-                      <span>{exercise.reps} reps</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <IoMdTime className="text-orange-400 w-4 h-4" />
-                      <span>{exercise.rest_time}s rest</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
 
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <AddExercise
@@ -300,6 +324,22 @@ const ExercisePage = () => {
           onConfirm={confirmDelete}
           message="Sei sicuro di voler eliminare questo esercizio?"
         />
+
+        {/* Bottom Sheet for Mobile Day Selection */}
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+          title="Choose Workout Day"
+        >
+          <WorkoutDaySelector
+            workoutDays={workoutDays}
+            selectedDay={selectedDay}
+            onSelectDay={handleSelectDay}
+            onEditDay={handleEditDay}
+            isMobile={true}
+            onClose={() => setIsBottomSheetOpen(false)}
+          />
+        </BottomSheet>
       </div>
     </div>
   );

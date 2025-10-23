@@ -1,0 +1,123 @@
+/* Toast styles per mobile */
+.toast-mobile .Toastify__toast {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  font-size: 14px;
+  padding: 12px 16px;
+}
+
+.toast-mobile .Toastify__toast--success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.toast-mobile .Toastify__toast--error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.toast-mobile .Toastify__toast--info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.toast-mobile .Toastify__toast--warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+/* Toast styles per desktop */
+.toast-desktop .Toastify__toast {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 4px;
+  font-size: 14px;
+  padding: 10px 14px;
+}
+
+.toast-desktop .Toastify__toast--success {
+  background: #10b981;
+  color: white;
+}
+
+.toast-desktop .Toastify__toast--error {
+  background: #ef4444;
+  color: white;
+}
+
+.toast-desktop .Toastify__toast--info {
+  background: #3b82f6;
+  color: white;
+}
+
+.toast-desktop .Toastify__toast--warning {
+  background: #f59e0b;
+  color: white;
+}
+
+/* Animazioni personalizzate per mobile - solo per l'entrata */
+.toast-mobile .Toastify__toast--animate {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Assicuriamo che l'animazione di uscita funzioni correttamente */
+.toast-mobile .Toastify__toast--animate-exit {
+  animation: slideOutDown 0.3s ease-in forwards;
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .toast-mobile .Toastify__toast {
+    width: 100% !important;
+    max-width: 400px !important;
+    margin: 0 auto 8px auto;
+    /* Assicuriamo che l'autoClose funzioni */
+    transition: all 0.3s ease !important;
+  }
+  
+  .toast-mobile .Toastify__toast-container {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 0 16px;
+  }
+  
+  /* Forziamo la chiusura dopo il timeout */
+  .toast-mobile .Toastify__toast--animate-exit {
+    animation: slideOutDown 0.3s ease-in forwards !important;
+  }
+}
+
+/* Assicuriamo che la progress bar funzioni correttamente */
+.toast-mobile .Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.3) !important;
+  height: 3px !important;
+}
+
+.toast-desktop .Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.3) !important;
+  height: 2px !important;
+}

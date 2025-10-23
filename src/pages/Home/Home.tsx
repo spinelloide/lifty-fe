@@ -13,6 +13,7 @@ import { sendToast } from "../../utils/toastUtils";
 import authServices from "../../services/AuthServices";
 import Page from "../../components/Page";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal.tsx";
+import { useIsMobile } from "../../hooks/useIsMobile.ts";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Home = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const user = authServices.getLoginData();
+  const isMobile = useIsMobile();
 
   const getWorkouts = async () => {
     try {
@@ -75,11 +77,18 @@ const Home = () => {
         />
       </div>
       <div className="space-y-8">
-        <Grid columns={4} gap={4}>
+        <Grid
+          columns={isMobile ? 1 : 4}
+          gap={4}
+          style={{
+            overflowY: isMobile ? "scroll" : "auto",
+            maxHeight: isMobile ? "500px" : "80vh",
+          }}
+        >
           {workoutList.map((workout) => (
             <div
               key={workout.id}
-              className="flex flex-col w-full hover:shadow-xl transition-all duration-300"
+              className="flex flex-col items-center lg:items-start w-full hover:shadow-xl transition-all duration-300"
             >
               <WorkoutCard
                 workout={workout}

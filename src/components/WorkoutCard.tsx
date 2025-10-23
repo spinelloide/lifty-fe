@@ -2,6 +2,7 @@ import { FiTrash2, FiCalendar, FiClock } from "react-icons/fi";
 import Card from "../ui/Card";
 import { Workout } from "../types/Workout";
 import IconButton from "../ui/IconButton";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 interface WorkoutCardProps {
   workout: Workout;
@@ -10,11 +11,12 @@ interface WorkoutCardProps {
 }
 
 const WorkoutCard = ({ workout, onDelete, onNavigate }: WorkoutCardProps) => {
+  const isMobile = useIsMobile();
   return (
     <Card
       key={workout.id}
       width="18"
-      height="18"
+      height={isMobile ? "10" : "18"}
       className="group cursor-pointer"
     >
       <div className="flex flex-col h-full relative">

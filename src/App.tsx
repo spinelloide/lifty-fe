@@ -1,4 +1,5 @@
 import "./App.css";
+import "./styles/toast.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,23 +16,26 @@ import Layout from "./components/Layout";
 import React from "react";
 import authServices from "./services/AuthServices";
 import ChatToTrainer from "./components/ChatToTrainer";
+import { useToastConfig } from "./hooks/useToastConfig";
 
 function App() {
   const authData = authServices.getLoginData();
+  const toastConfig = useToastConfig();
 
   return (
     <React.Fragment>
       <Router>
         <Layout>
           <ToastContainer
-            position="top-right"
-            autoClose={3000}
+            position={toastConfig.position}
+            autoClose={toastConfig.autoClose}
             hideProgressBar={false}
             newestOnTop
             closeOnClick
             rtl={false}
             pauseOnFocusLoss
-            style={{ zIndex: 9999 }}
+            style={toastConfig.style}
+            className={toastConfig.className}
             draggable
             pauseOnHover
           />

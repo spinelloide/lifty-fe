@@ -45,15 +45,15 @@ const Login = () => {
       <div className="w-full flex items-center justify-center p-8">
         <div className="w-full max-w-lg">
           <div className="mb-12 space-y-4">
-            <h1 className="text-5xl text-center font-bold text-white tracking-tight">
+            <h1 className="text-3xl lg:text-5xl text-center font-bold text-white tracking-tight">
               Welcome to Lifty
             </h1>
-            <p className="text-gray-400 text-center text-xl leading-relaxed">
+            <p className="text-gray-400 text-center text-md lg:text-xl leading-relaxed">
               Your personal workout companion. Transform your fitness journey
               with customized workout plans and expert guidance.
             </p>
           </div>
-          <div className="bg-gray-800 rounded-xl shadow-2xl p-8 transform transition-all duration-300 hover:scale-[1.02]">
+          <div className="bg-gray-800 rounded-xl shadow-2xl p-4 lg:p-8 transform transition-all duration-300 hover:scale-[1.02]">
             <Form
               className="space-y-6"
               fields={fields}
